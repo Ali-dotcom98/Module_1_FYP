@@ -3,16 +3,10 @@ const mongoose = require("mongoose");
 const testCaseSchema = new mongoose.Schema({
     input: {
         type: String,
-        required: true
     },
     expectedOutput: {
         type: String,
-        required: true
     },
-    isPublic: {
-        type: Boolean,
-        default: false
-    }
 });
 
 const challengeSchema = new mongoose.Schema({
@@ -42,11 +36,15 @@ const challengeSchema = new mongoose.Schema({
     },
     startTime: {
         type: Date,
-        required: true
+
     },
     duration: {
         type: Number,
-        required: true
+
+    },
+    isPublic: {
+        type: Boolean,
+        default: false
     },
     testCases: [testCaseSchema],
     tags: {
