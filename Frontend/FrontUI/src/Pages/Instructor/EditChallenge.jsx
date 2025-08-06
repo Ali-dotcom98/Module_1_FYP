@@ -189,11 +189,8 @@ const goBack = ()=>{
     "test-cases",
     "examples",
     ];
-    if(currentPage == "examples" )
-        return
-    
     const CurrentPageIndex = pageOrder.indexOf(currentPage)
-
+    
     setcurrentPage(pageOrder[CurrentPageIndex-1])
 }
 
@@ -256,6 +253,12 @@ const goToNextStep = ()=>{
     "examples",
     ];
     const CurrentPageIndex = pageOrder.indexOf(currentPage)
+     if(CurrentPageIndex == 3)
+    {
+    
+        return ;
+    }
+
 
     setcurrentPage(pageOrder[CurrentPageIndex+1])
 }
