@@ -1,14 +1,17 @@
 // src/ProtectedRoute.jsx
 import React, { useContext } from 'react';
 import { Navigate } from 'react-router-dom';
-import { Usecontext } from '../../Pages/ContextApi/UserContext';
+import { UserContext } from '../../Pages/ContextApi/UserContext';
 
 const Protected = ({ children, allowed }) => {
-  const { status } = useContext(Usecontext);
+  const { User , loading} = useContext(UserContext);
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
-  if (!status) return <Navigate to="/Login" />;
+  if (!User.status) return <Navigate to="/Login" />;
 
-  if (!allowed.includes(status)) return <Navigate to="/" />;
+  if (!allowed.includes(User.status)) return <Navigate to="/" />;
 
   return children;
 };
