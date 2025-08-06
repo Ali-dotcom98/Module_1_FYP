@@ -8,10 +8,15 @@ const AuthRoutes = require("./Routers/AuthRoutes")
 const Challenge = require("./Routers/ChallengeRoutes");
 
 const { ConnectDb } = require("./DataBase/ConnectDB");
+const Cors = require("cors")
 
 ConnectDb();
 
 app.use(express.json());
+app.use(Cors({
+    origin: "http://localhost:5173",
+    credentials: true
+}))
 
 app.use("/Auth", AuthRoutes);
 app.use("/Chlg", Challenge)

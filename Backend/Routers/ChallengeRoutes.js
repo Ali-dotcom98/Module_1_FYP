@@ -19,10 +19,18 @@ route.post("/Create", Protect, async (req, res) => {
             duration: "",
             tags: "",
             isPublic: false,
+            Question: "",
             testCases: [
                 {
                     input: "",
                     expectedOutput: "",
+                }
+            ],
+            examples: [
+                {
+                    ExampleURl: "",
+                    input: "",
+                    output: ""
                 }
             ]
         }
@@ -58,11 +66,12 @@ route.get("/GetAll", Protect, async (req, res) => {
 
 route.get("/GetAll/:id", Protect, async (req, res) => {
     try {
+        const ChallengeID = req.params.id;
         const status = req.user.status;
         if (status == "Student")
             return res.status(401).json({ message: "Student are Not Allowed" })
 
-        const NumberOfChallengeCreated = await Challenge_Model.findOne({ UserID: req.user._id })
+        const NumberOfChallengeCreated = await Challenge_Model.findOne({ _id: ChallengeID })
         if (!NumberOfChallengeCreated)
             return res.send("The challenge ID you are looking for does not exist.")
         res.send(NumberOfChallengeCreated)

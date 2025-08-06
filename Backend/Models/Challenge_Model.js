@@ -18,6 +18,9 @@ const challengeSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    Question: {
+        type: String
+    },
     description: {
         type: String,
         required: true
@@ -51,6 +54,14 @@ const challengeSchema = new mongoose.Schema({
         type: [String],
         default: []
     },
+    examples: [
+        {
+            ExampleURl: { type: String },
+            input: { type: String },
+            output: { type: String }
+        }
+    ]
+
 }, { timestamps: { createdAt: "createdAt", updatedAt: "updatedAt" } });
 
 module.exports = mongoose.model("Challenge", challengeSchema);
