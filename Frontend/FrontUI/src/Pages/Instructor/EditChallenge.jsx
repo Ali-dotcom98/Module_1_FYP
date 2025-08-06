@@ -1,20 +1,23 @@
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import AxiosInstance from '../../Utility/AxiosInstance';
 import { API_PATHS } from '../../Utility/API_Path';
 import TitleInput from '../../Components/TitleInput';
 import { LuArrowLeft, LuCircleAlert, LuDownload, LuSave, LuTrash2 } from 'react-icons/lu';
 import BasicChallengeInfoForm from './Form/BasicChallengeInfoForm';
-import { Key } from 'lucide-react';
+import { ChartArea, Key } from 'lucide-react';
 import FunctionSettingsForm from './Form/FunctionSettingsForm';
 import TestCasesForm from './Form/TestCasesForm';
 import ExamplesForm from './Form/ExamplesForm';
+import Modal from '../../Layouts/Modal';
 
 const EditChallenge = () => {
+    const navigator = useNavigate();
     const {ChallengeID} = useParams();
     const [currentPage, setcurrentPage] = useState("basic-info")
     const [errorMsg, seterrorMsg] = useState("")
     const [isLoading, setisLoading] = useState(false)
+    const [DeleteModel, setDeleteModel] = useState(false)
 
     const [DefaultChlng, setDefaultChlng] = useState({
         title : "",
@@ -181,6 +184,21 @@ const updateSection = (key , value)=>{
     ))
 }
 
+const DeleteChallenge = async()=>{
+    try {
+        const response = await AxiosInstance.delete(API_PATHS.CHALLENGE.DELETE(ChallengeID));
+        if(response?.data)
+        {
+            navigator("/Instructor/Dashboard")
+        }
+    } catch (error) {
+    const errorMessage =
+      error.response?.data?.message || "Failed to delete resume. Try again.";
+    toast.error(errorMessage);
+    console.error("Delete error:", error);
+  }
+}
+
 
 const goBack = ()=>{
     const pageOrder = [
@@ -290,7 +308,7 @@ useEffect(() => {
 
             <button
             className="btn-small-light"
-            // onClick={()=> setDeleteModel(true)}
+            onClick={()=> setDeleteModel(true)}
             >
             <LuTrash2 className="text-[16px]" />
             <span className="hidden md:block">Delete</span>
@@ -363,9 +381,44 @@ useEffect(() => {
             </div>
 
             </div>
+            <div className="bg-white rounded-lg border border-purple-100 overflow-hidden">
+            </div>
         </div>
 
+        <Modal
+            isOpen = {DeleteModel}
+            onClose = {()=> setDeleteModel((prev)=>!prev)}
+            title={`Delete the Competition`}
+            type={"Banner"}
+        >
+            <div className='mt-10 px-5 text-center'>
+                <div className="text-black px-4 py-2">
+                    <p className="text-lg mb-4">
+                    You're about to permanently delete the  titled{' '}
+                    <span className="font-semibold text-red-600">"{DefaultChlng.title}"</span>.
+                    This action cannot be undone.
+                    </p>
+
+                    <div className="flex items-center justify-center mt-10 gap-4">
+                    <button
+                        onClick={() => setDeleteModel(false)}
+                        className="px-4 py-2 rounded-md border border-gray-300 hover:bg-gray-100 transition"
+                    >
+                        Cancel
+                    </button>
+                    <button
+                        onClick={DeleteChallenge}
+                        className="px-4 py-2 rounded-md bg-red-600 text-white hover:bg-red-700 transition"
+                    >
+                        Yes, Delete
+                    </button>
+                    </div>
+                </div>
+            </div>
+
+        </Modal>
     </div>
+    
     )
 }   
 export default EditChallenge
