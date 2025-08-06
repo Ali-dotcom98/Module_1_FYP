@@ -10,6 +10,7 @@ import FunctionSettingsForm from './Form/FunctionSettingsForm';
 import TestCasesForm from './Form/TestCasesForm';
 import ExamplesForm from './Form/ExamplesForm';
 import Modal from '../../Layouts/Modal';
+import RenderFrom from './RenderForm/RenderFrom';
 
 const EditChallenge = () => {
     const navigator = useNavigate();
@@ -381,10 +382,12 @@ useEffect(() => {
             </div>
 
             </div>
-            <div className="bg-white rounded-lg border border-purple-100 overflow-hidden">
+            <div className=" bg-gray-100 rounded-lg shadow">
+                <RenderFrom
+                    data = {DefaultChlng}
+                />
             </div>
         </div>
-
         <Modal
             isOpen = {DeleteModel}
             onClose = {()=> setDeleteModel((prev)=>!prev)}
