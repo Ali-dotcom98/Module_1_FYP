@@ -1,29 +1,7 @@
-import axios from "axios";
+
 import moment from "moment"
 import html2canvas from "html2canvas";
 
-
-// const UploadImage = async (imageFile) => {
-//     const formData = new FormData();
-//     formData.append('image', imageFile);
-//     try {
-//         const response = await axios.post("http://localhost:3000/api/auth/uploadImg", formData,
-//             {
-//                 headers: {
-//                     "Content-Type": "multipart/form-data"
-//                 }
-//             }
-//         )
-
-//         return response.data
-//     } catch (error) {
-//         console.log("Error uploading the image", error);
-
-//     }
-// }
-// export default UploadImage
-
-// Eg: Mar 2025
 export function formatYearMonth(yearMonth) {
     return yearMonth ? moment(yearMonth, "YYYY-MM").format("MMM YYYY") : "";
 }

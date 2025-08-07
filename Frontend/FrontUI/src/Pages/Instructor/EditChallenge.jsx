@@ -12,7 +12,7 @@ import ExamplesForm from './Form/ExamplesForm';
 import Modal from '../../Layouts/Modal';
 import RenderFrom from './RenderForm/RenderFrom';
 import { captureElementAsImage, dataURLtoFile, fixTailwindColors } from '../../Utility/Helper';
-
+import Spinner from '../../Components/Spinner/Spinner';
 const EditChallenge = () => {
     const navigator = useNavigate();
     const resumeRef = useRef();
@@ -22,6 +22,7 @@ const EditChallenge = () => {
     const [isLoading, setisLoading] = useState(false)
     const [DeleteModel, setDeleteModel] = useState(false)
     const [baseWidth, setBaseWidth] = useState(800);
+    const [Buffer, setBuffer] = useState(true)
 
     const [DefaultChlng, setDefaultChlng] = useState({
         title : "",
@@ -349,7 +350,9 @@ const goToNextStep = ()=>{
 
     setcurrentPage(pageOrder[CurrentPageIndex+1])
 }
-
+const gotoHome = ()=>{
+    navigator("/Instructor/Dashboard");
+}
 const updateBaseWidth = () => {
   if (resumeRef.current) {
     setBaseWidth(resumeRef.current.offsetWidth);
@@ -359,17 +362,44 @@ const updateBaseWidth = () => {
   updateBaseWidth();
   window.addEventListener("resize", updateBaseWidth);
   if (ChallengeID) {
-    fetchChallengeDetailsById();
+    try {
+       
+        fetchChallengeDetailsById();
+    } catch (error) {
+        console.log(error);
+        
+    }
   }
   return () => {
     window.removeEventListener("resize", updateBaseWidth);
   };
-}, [ChallengeID]);
+}, [ChallengeID , Buffer]);
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setBuffer(false);
+        }, 3000);
+
+        return () => clearTimeout(timer);
+    }, []);
+
+    if (Buffer) {
+        return <Spinner message={"Preparing your challenge..."}/>
+    }
 
     return (
     <div className="container mx-auto font-urbanist">
-        <div className="flex items-center justify-between gap-5 bg-white rounded-lg border border-purple-100py-3 px-4 mb-4 py-3 ">
-        <TitleInput
+        <div className="flex items-center justify-between gap-5 bg-white rounded-lg border border-purple-100py-3 px-4 mb-4 py-3 mt-4">
+        
+        <div className="flex items-center gap-4">
+            <button
+            className="btn-small-light"
+            onClick={gotoHome}
+            >
+            <LuArrowLeft className="text-[16px]" />
+            <span className="hidden md:block">Home</span>
+            </button>
+            <TitleInput
             title={DefaultChlng.title}
             setTitle={(value) =>
             setDefaultChlng((prevState) => ({
@@ -378,6 +408,9 @@ const updateBaseWidth = () => {
             }))
             }
         />
+
+        </div>
+        
         <div className="flex items-center gap-4">
 
             <button

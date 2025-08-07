@@ -1,28 +1,11 @@
 import React, { useEffect, useState } from 'react'
-// import { getLightColorFromImage } from '../../Utils/data';
 
 const ChallengeCard = ({ imgurl, title, lastUpdated, onSelect }) => {  
-    console.log("imgurl", imgurl);
-     
-    const [bgColor, setBgColor] = useState("#ffffff");
-
-
-    // useEffect(() => {
-    // if (imgurl) {
-    //     getLightColorFromImage(imgurl)
-    //     .then((color) => {
-    //         setBgColor(color);
-    //     })
-    //     .catch(() => {
-    //         setBgColor("#ffffff");
-    //     });
-    // }
-    // }, [imgurl]);
-
+    
     return(
         <div
             className="h-[300px] flex flex-col items-center justify-between bg-white rounded-lg border border-gray-200  cursor-pointer hover:border-purple-600 overflow-hidden transition"
-            // style={{backgroundColor: bgColor}}
+            style={{backgroundColor: "rgb(246, 250, 250)"}}
             onClick={onSelect}
             >
             <div className="p-4">
