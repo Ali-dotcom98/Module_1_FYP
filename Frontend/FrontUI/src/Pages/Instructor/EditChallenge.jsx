@@ -13,6 +13,7 @@ import Modal from '../../Layouts/Modal';
 import RenderFrom from './RenderForm/RenderFrom';
 import { captureElementAsImage, dataURLtoFile, fixTailwindColors } from '../../Utility/Helper';
 import Spinner from '../../Components/Spinner/Spinner';
+import DeleteCard from '../../Components/Cards/DeleteCard';
 const EditChallenge = () => {
     const navigator = useNavigate();
     const resumeRef = useRef();
@@ -498,33 +499,13 @@ const updateBaseWidth = () => {
         <Modal
             isOpen = {DeleteModel}
             onClose = {()=> setDeleteModel((prev)=>!prev)}
-            title={`Delete the Competition`}
+            title={`DeleteCompetition`}
             type={"Banner"}
         >
-            <div className='mt-10 px-5 text-center'>
-                <div className="text-black px-4 py-2">
-                    <p className="text-lg mb-4">
-                    You're about to permanently delete the  titled{' '}
-                    <span className="font-semibold text-red-600">"{DefaultChlng.title}"</span>.
-                    This action cannot be undone.
-                    </p>
-
-                    <div className="flex items-center justify-center mt-10 gap-4">
-                    <button
-                        onClick={() => setDeleteModel(false)}
-                        className="px-4 py-2 rounded-md border border-gray-300 hover:bg-gray-100 transition"
-                    >
-                        Cancel
-                    </button>
-                    <button
-                        onClick={DeleteChallenge}
-                        className="px-4 py-2 rounded-md bg-red-600 text-white hover:bg-red-700 transition"
-                    >
-                        Yes, Delete
-                    </button>
-                    </div>
-                </div>
-            </div>
+            <DeleteCard 
+                DefaultChlng = {DefaultChlng}
+                DeleteChallenge = {DeleteChallenge}
+            />
 
         </Modal>
     </div>
