@@ -1,8 +1,10 @@
 const express = require("express");
 const route = express.Router();
 const { Protect } = require("../Middleware/Token_Middleware")
-const Challenge_Model = require("../Models/Challenge_Model")
-
+const Challenge_Model = require("../Models/Challenge_Model");
+const upload = require("../Middleware/Upload_Middleware");
+const path = require("path")
+const fs = require("fs");
 route.post("/Create", Protect, async (req, res) => {
     try {
 
@@ -20,6 +22,7 @@ route.post("/Create", Protect, async (req, res) => {
             tags: "",
             isPublic: false,
             Question: "",
+            thumbnailLink: "",
             testCases: [
                 {
                     input: "",
@@ -115,5 +118,68 @@ route.delete("/Delete/:id", Protect, async (req, res) => {
     }
 
 })
+
+route.put("/:id/upload-image", (req, res) => {
+    try {
+        upload.fields([{ name: 'thumbnail' }, { name: 'profileImage' }])(req, res, async (err) => {
+            if (err) {
+                return res.status(400).json({ message: "File upload failed", error: err.message });
+            }
+
+            const ChallengeID = req.params.id;
+            const Challenge = await Challenge_Model.findOne({ _id: ChallengeID });
+            console.log(Challenge);
+
+
+            if (!Challenge) {
+                return res.status(404).json({ message: "Challenge not found or unauthorized" });
+            }
+
+            const uploadsFolder = path.join(__dirname, '..', 'upload');
+            console.log("uploadsFolder", uploadsFolder);
+
+            const baseUrl = `${req.protocol}://${req.get("host")}`;
+
+            const newThumbnail = req.files.thumbnail?.[0];
+            // const newProfileImage = req.files.profileImage?.[0];
+
+
+            // console.log("newProfileImage", newProfileImage);
+
+            if (newThumbnail) {
+                console.log("resume.thumbnaillink", Challenge.thumbnailLink);
+                if (Challenge.thumbnailLink) {
+                    const oldThumbnail = path.join(uploadsFolder, path.basename(Challenge.thumbnailLink));
+                    if (fs.existsSync(oldThumbnail)) fs.unlinkSync(oldThumbnail);
+                }
+                Challenge.thumbnailLink = `${baseUrl}/uploads/${newThumbnail.filename}`;
+            }
+
+            // If new profile image uploaded, delete old one
+            // if (newProfileImage && resume.profileInfo?.profilePreviewUrl) { // Original commented line
+            // if (newProfileImage) {
+            //     console.log("resume.profileInfo?.profilePreviewUrl", resume.profileInfo?.profilePreviewUrl);
+
+            //     if (resume.profileInfo?.profilePreviewUrl) {
+            //         const oldProfile = path.join(uploadsFolder, path.basename(resume.profileInfo.profilePreviewUrl));
+            //         if (fs.existsSync(oldProfile)) fs.unlinkSync(oldProfile);
+            //     }
+            //     resume.profileInfo.profilePreviewUrl = `${baseUrl}/uploads/${newProfileImage.filename}`;
+            // }
+            // console.log("profilePreviewUrl: resume.profilePreviewUrl", resume.profilePreviewUrl);
+
+            await Challenge.save();
+            res.status(200).json({
+                Message: "Images uploaded Successfully",
+                thumbnaillink: Challenge.thumbnailLink,
+            })
+        });
+    } catch (error) {
+        console.error("Error in uploadResumeImages:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+})
+
+
 
 module.exports = route

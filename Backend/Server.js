@@ -3,7 +3,7 @@ const app = express();
 const User_Model = require("./Models/User_Model");
 const Submission_Model = require("./Models/Submission");
 const Challenge_Model = require("./Models/Challenge_Model");
-
+const path = require("path")
 const AuthRoutes = require("./Routers/AuthRoutes")
 const Challenge = require("./Routers/ChallengeRoutes");
 
@@ -19,7 +19,14 @@ app.use(Cors({
 }))
 
 app.use("/Auth", AuthRoutes);
-app.use("/Chlg", Challenge)
+app.use("/Chlg", Challenge);
+app.use('/uploads', express.static(path.join(__dirname, 'uploads'),
+    {
+        setHeaders: (res, path) => {
+            res.set("Access-Control-Allow-Origin", "http://localhost:5173")
+        }
+    }
+));
 
 app.listen(3000, () => {
     console.log("App Running on Port 3000 ... ");

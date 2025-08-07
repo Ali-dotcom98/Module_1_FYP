@@ -54,6 +54,9 @@ const challengeSchema = new mongoose.Schema({
         type: [String],
         default: []
     },
+    thumbnailLink: {
+        type: String,
+    },
     examples: [
         {
             ExampleURl: { type: String },
