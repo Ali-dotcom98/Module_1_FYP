@@ -11,6 +11,7 @@
   import UserProvider from './Pages/ContextApi/UserContext'
 import EditChallenge from './Pages/Instructor/EditChallenge'
 import EditChallengeLayout from './Layouts/Instructor/EditChallengeLayout'
+import CodeEditor from './Pages/Students/CodeEditor'
   const App = () => {
       
     return (
@@ -39,10 +40,12 @@ import EditChallengeLayout from './Layouts/Instructor/EditChallengeLayout'
                     <DefaultLayout/>
                   </Protected>
                 }
-                
                 >
                 <Route path='Dashboard' element={<StudentDashboard/>}/>
               </Route>
+              <Route path='/Student/Editor/:ChallengeID' element={
+                  <CodeEditor/>
+                }/>
 
           </Routes>
         </Router>

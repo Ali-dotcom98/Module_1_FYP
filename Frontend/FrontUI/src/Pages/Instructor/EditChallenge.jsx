@@ -36,6 +36,7 @@ const EditChallenge = () => {
         functionSignature : "",
         difficulty : "",
         startTime: "",
+        endTime:"",
         duration: "",
         Question:"",
         isPublic: null,
@@ -176,6 +177,7 @@ const RenderForm= ()=>{
                 <FunctionSettingsForm   
                 functionSignature={DefaultChlng.functionSignature}
                 startTime={DefaultChlng.startTime}
+                endTime={DefaultChlng.endTime}
                 duration={DefaultChlng.duration}
                 isPublic={DefaultChlng.isPublic}
                 tags={DefaultChlng.tags}
@@ -302,8 +304,11 @@ const validateAndNext = (e) => {
         }
 
         case "function-settings": {
-            const { startTime, duration, functionSignature, tags } = DefaultChlng;
+            const { startTime, duration, functionSignature, tags , endTime } = DefaultChlng;
             if (!startTime) errors.push("Start time is required.");
+            if(!endTime)  errors.push("End time is required.");
+            if (new Date(endTime) < new Date(startTime)) errors.push("End time must be after start time.");
+            if (new Date(startTime) < new Date()) errors.push("Start time must be in the future.");
             if (!duration) errors.push("Duration is required.");
             if (!functionSignature.trim()) errors.push("Function signature is required.");
             if (tags.length === 0 || !tags[0].trim()) {

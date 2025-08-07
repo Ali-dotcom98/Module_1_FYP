@@ -11,6 +11,7 @@ export const API_PATHS = {
         CREATE: "/Chlg/Create",
         GET_ALL: "/Chlg/GetAll",
         GET_BY_ID: (id) => `/Chlg/GetAll/${id}`,
+        GET_PUBLIC_CHALLENGE: "/Chlg/GetAllWithPublic",
         UPDATE: (id) => `/Chlg/Update/${id}`,
         DELETE: (id) => `/Chlg/Delete/${id}`,
         UPLOAD_IMAGES: (id) => `/Chlg/${id}/upload-image`

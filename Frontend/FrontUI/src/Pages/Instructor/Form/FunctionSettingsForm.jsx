@@ -2,7 +2,7 @@ import React from 'react'
 import Input from '../../../Components/input'
 import { LuPlus, LuTrash2 } from 'react-icons/lu'
 
-const FunctionSettingsForm = ({functionSignature,startTime,duration,isPublic,tags,updateSection , AddItemInArray , removeArrayItem ,updateArrayItem}) => {
+const FunctionSettingsForm = ({functionSignature,startTime,duration,isPublic,tags,updateSection ,endTime, AddItemInArray , removeArrayItem ,updateArrayItem}) => {
   return (
     <div className="px-5 pt-5">
             <h2 className="text-lg  font-semibold text-gray-900">FunctionSettings</h2>
@@ -19,6 +19,12 @@ const FunctionSettingsForm = ({functionSignature,startTime,duration,isPublic,tag
                     value={startTime}
                     onchange={({ target }) => updateSection("startTime", target.value)}
                     />
+                    <Input
+                    value={ endTime|| ""}
+                    onchange={({ target }) => updateSection("endTime", target.value)}
+                    label="endTime"
+                    type="date"
+                    />
 
                     <Input
                     value={duration || ""}
@@ -27,6 +33,9 @@ const FunctionSettingsForm = ({functionSignature,startTime,duration,isPublic,tag
                     placeholder="30 min "
                     type="Number"
                     />
+
+                   
+
 
                 </div>
 
