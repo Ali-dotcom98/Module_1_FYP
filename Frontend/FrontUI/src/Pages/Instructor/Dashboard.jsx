@@ -44,7 +44,7 @@ const Dashboard = () => {
               {AllChallenge?.map((Challenge) => (
                 <ChallengeCard
                   key={Challenge?._id}
-                  imgurl={Challenge?.thumbnaillink || null}
+                  imgurl={Challenge?.thumbnailLink || null}
                   title={Challenge?.title || "Untitled Resume"}
                   lastUpdated={
                     Challenge?.updatedAt

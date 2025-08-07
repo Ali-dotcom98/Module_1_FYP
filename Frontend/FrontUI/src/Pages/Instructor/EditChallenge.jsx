@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import AxiosInstance from '../../Utility/AxiosInstance';
 import { API_PATHS } from '../../Utility/API_Path';
@@ -11,14 +11,17 @@ import TestCasesForm from './Form/TestCasesForm';
 import ExamplesForm from './Form/ExamplesForm';
 import Modal from '../../Layouts/Modal';
 import RenderFrom from './RenderForm/RenderFrom';
+import { captureElementAsImage, dataURLtoFile, fixTailwindColors } from '../../Utility/Helper';
 
 const EditChallenge = () => {
     const navigator = useNavigate();
+    const resumeRef = useRef();
     const {ChallengeID} = useParams();
     const [currentPage, setcurrentPage] = useState("basic-info")
     const [errorMsg, seterrorMsg] = useState("")
     const [isLoading, setisLoading] = useState(false)
     const [DeleteModel, setDeleteModel] = useState(false)
+    const [baseWidth, setBaseWidth] = useState(800);
 
     const [DefaultChlng, setDefaultChlng] = useState({
         title : "",
@@ -80,10 +83,75 @@ const fetchChallengeDetailsById = async () => {
   }
 };
 
-const uploadResumeImages = () =>{
+const upLoadChallengeImage = async () => {
+    try {
+        setisLoading(true);
+        fixTailwindColors(resumeRef.current);
 
-}
+        const imageDataUrl = await captureElementAsImage(resumeRef.current);
 
+        // Convert base64 to File
+        const thumbnailFile = dataURLtoFile(
+            imageDataUrl,
+            `Challenge-${ChallengeID}.png`
+        );
+        
+
+        const ThumbnailForStudent = null;
+        
+        
+
+        const formData = new FormData();
+        // if (ThumbnailForStudent) formData.append("profileImage", profileImageFile);
+        if (thumbnailFile) formData.append("thumbnail", thumbnailFile);
+
+        const uploadResponse = await AxiosInstance.put(
+            API_PATHS.CHALLENGE.UPLOAD_IMAGES(ChallengeID),
+            formData,
+            {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            }
+        );
+
+        const { thumbnaillink } = uploadResponse.data;
+        console.log("thumbnailLink", thumbnaillink);
+        
+        
+
+        // Call the second API to update other resume data
+        await updateChallengeDetails(thumbnaillink);
+
+        // toast.success("Resume Updated Successfully!");
+        navigator("/Instructor/Dashboard");
+    } catch (error) {
+        console.error("Error uploading images:", error);
+        // toast.error("Failed to upload images");
+    } finally {
+        setisLoading(false);
+    }
+};
+
+const updateChallengeDetails = async (thumbnailLink) => {
+    try {
+        setisLoading(true);
+       
+
+        const response = await AxiosInstance.put(
+            API_PATHS.CHALLENGE.UPDATE(ChallengeID),
+            {
+                ...DefaultChlng,
+                thumbnailLink: thumbnailLink || "",
+            }
+        );
+       
+    } catch (err) {
+        console.error("Error capturing image:", err);
+    } finally {
+        setisLoading(false);
+    }
+};
 const RenderForm= ()=>{
     switch (currentPage) {
         case "basic-info":
@@ -282,15 +350,20 @@ const goToNextStep = ()=>{
     setcurrentPage(pageOrder[CurrentPageIndex+1])
 }
 
-useEffect(() => {
-//   updateBaseWidth();
-//   window.addEventListener("resize", updateBaseWidth);
+const updateBaseWidth = () => {
+  if (resumeRef.current) {
+    setBaseWidth(resumeRef.current.offsetWidth);
+  }
+};
+  useEffect(() => {
+  updateBaseWidth();
+  window.addEventListener("resize", updateBaseWidth);
   if (ChallengeID) {
     fetchChallengeDetailsById();
   }
-//   return () => {
-//     window.removeEventListener("resize", updateBaseWidth);
-//   };
+  return () => {
+    window.removeEventListener("resize", updateBaseWidth);
+  };
 }, [ChallengeID]);
 
     return (
@@ -353,7 +426,7 @@ useEffect(() => {
 
         <button
             className="btn-small-light flex items-center gap-2 border"
-            onClick={uploadResumeImages}
+            onClick={upLoadChallengeImage}
             disabled={isLoading}
         >
             <LuSave className="text-[16px]" />
@@ -382,9 +455,10 @@ useEffect(() => {
             </div>
 
             </div>
-            <div className=" bg-gray-100 rounded-lg shadow">
+            <div ref={resumeRef} className="h-[100vh] bg-gray-100 rounded-lg shadow">
                 <RenderFrom
                     data = {DefaultChlng}
+                    containerWidth = {baseWidth}
                 />
             </div>
         </div>

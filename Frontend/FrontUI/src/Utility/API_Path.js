@@ -13,7 +13,7 @@ export const API_PATHS = {
         GET_BY_ID: (id) => `/Chlg/GetAll/${id}`,
         UPDATE: (id) => `/Chlg/Update/${id}`,
         DELETE: (id) => `/Chlg/Delete/${id}`,
-        UPLOAD_IMAGES: (id) => `/Resume/${id}/upload-image`
+        UPLOAD_IMAGES: (id) => `/Chlg/${id}/upload-image`
     },
 
     IMAGE: {

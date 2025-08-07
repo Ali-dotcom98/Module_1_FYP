@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react'
 // import { getLightColorFromImage } from '../../Utils/data';
 
-const ChallengeCard = ({ imgurl, title, lastUpdated, onSelect }) => {   
+const ChallengeCard = ({ imgurl, title, lastUpdated, onSelect }) => {  
+    console.log("imgurl", imgurl);
+     
     const [bgColor, setBgColor] = useState("#ffffff");
 
 
@@ -28,7 +30,7 @@ const ChallengeCard = ({ imgurl, title, lastUpdated, onSelect }) => {
                 <img
                     src={imgurl}
                     alt="Resume Thumbnail"
-                    className="object-cover h-[200px] rounded"
+                    className=" h-[210px] rounded"
                 />
                 ) : (
                 <span className="text-gray-400">No Preview Available</span>

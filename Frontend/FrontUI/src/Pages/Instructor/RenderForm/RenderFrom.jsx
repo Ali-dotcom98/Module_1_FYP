@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { DefaultContext } from 'react-icons/lib';
 import { formatYearMonth } from '../../../Utility/Helper';
 
@@ -16,13 +16,33 @@ const Title = ({ text, color }) => {
 const CodeBlock = ({ code }) => (
   <pre className="bg-gray-100 text-sm p-2 rounded-md overflow-x-auto">{code}</pre>
 );
-const RenderFrom = ({data}) => {
+const RenderFrom = ({data , containerWidth}) => {
     const [showAllTests, setShowAllTests] = useState(false);
     const displayedTests = showAllTests ? data.testCases : data.testCases.slice(0, 2);
 
     const DEFAULT_THEME = ["#EBFDFF", "#A1F4FD", "#CEFAFE", "#00B8DB", "#4A5565"];
+     const resumeRef = useRef(null);
+    const [baseWidth, setBaseWidth] = useState(780); // Default value
+    const [scale, setScale] = useState(1);
+
+    useEffect(() => {
+        if (resumeRef.current) {
+        const actualBaseWidth = resumeRef.current.offsetWidth;
+        setBaseWidth(actualBaseWidth);
+        setScale(containerWidth / actualBaseWidth);
+        }
+    }, [containerWidth]);
   return (
-      <div className="flex flex-col bg-white ">
+    <div
+        ref={resumeRef}
+        className="p-3 bg-white"
+        style={{
+        transform: containerWidth > 0 ? `scale(${scale})` : "none",
+        transformOrigin: "top left",
+        width: containerWidth > 0 ? `${baseWidth}px` : "auto", // Keep the original width when not scaled
+        height: "auto",
+        }}>
+        <div className="flex flex-col bg-white ">
             <div className="py-5 border-b-2  border-b-[#A1F4FD] " style={{ backgroundColor: DEFAULT_THEME[0] }}>
                 <div className="flex flex-col items-center px-2  ">
                     <Title text="Code Asced Code Competion " color={DEFAULT_THEME[1]} />
@@ -37,7 +57,7 @@ const RenderFrom = ({data}) => {
                 </div>
                
             </div>
-            <div className='px-5 py-3 space-y-2'>
+            <div className='px-5 py-3 space-y-4'>
                 <div>
                     <Title text="Problem Description" color={DEFAULT_THEME[1]} />
                     <p className="text-sm font-medium">
@@ -91,12 +111,47 @@ const RenderFrom = ({data}) => {
                             </button>
                         )}
                     </div>
-
-
                 </div>
+                  <div className="w-full col-span-2 ">
+                            <Title text="Tags" color={DEFAULT_THEME[1]} />
+                            <div className="flex flex-row items-center flex-wrap gap-3">
+                                {data.tags.map((interest, index) => {
+                                if (!interest) return null;
+                                return (
+                                    <div
+                                    key={`interest_${index}`}
+                                    className="text-[10px] font-medium py-1 px-3 rounded-lg"
+                                    style={{ backgroundColor: DEFAULT_THEME[2] }}
+                                    >
+                                    {interest}
+                                    </div>
+                                );
+                                })}
+                            </div>
+                    </div>
+                {/* <div className="w-full col-span-2 ">
+                            <Title text="Tags" color={DEFAULT_THEME[1]} />
+                            <div className="flex flex-row items-center flex-wrap gap-3">
+                                {data.tags.map((interest, index) => {
+                                if (!interest) return null;
+                                return (
+                                    <div
+                                    key={`interest_${index}`}
+                                    className="text-[10px] font-medium py-1 px-3 rounded-lg"
+                                    style={{ backgroundColor: DEFAULT_THEME[2] }}
+                                    >
+                                    {interest}
+                                    </div>
+                                );
+                                })}
+                            </div>
+                    </div> */}
             </div>
             
         </div>
+    </div>
+
+      
   )
 }
 
