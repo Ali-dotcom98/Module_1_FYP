@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { use, useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import AxiosInstance from '../../Utility/AxiosInstance';
 import { API_PATHS } from '../../Utility/API_Path';
@@ -14,6 +14,7 @@ import RenderFrom from './RenderForm/RenderFrom';
 import { captureElementAsImage, dataURLtoFile, fixTailwindColors } from '../../Utility/Helper';
 import Spinner from '../../Components/Spinner/Spinner';
 import DeleteCard from '../../Components/Cards/DeleteCard';
+import StepProgress from '../../Components/Progress/StepProgress';
 const EditChallenge = () => {
     const navigator = useNavigate();
     const resumeRef = useRef();
@@ -23,7 +24,10 @@ const EditChallenge = () => {
     const [isLoading, setisLoading] = useState(false)
     const [DeleteModel, setDeleteModel] = useState(false)
     const [baseWidth, setBaseWidth] = useState(800);
-    const [Buffer, setBuffer] = useState(true)
+    const [Buffer, setBuffer] = useState(false)
+    const [progress, setprogress] = useState(0)
+    console.log("progress",progress);
+    
 
     const [DefaultChlng, setDefaultChlng] = useState({
         title : "",
@@ -279,8 +283,10 @@ const goBack = ()=>{
     "examples",
     ];
     const CurrentPageIndex = pageOrder.indexOf(currentPage)
-    
+    const percent = Math.round(((CurrentPageIndex-1) / (pageOrder.length - 1)) * 100);
+    setprogress(percent)
     setcurrentPage(pageOrder[CurrentPageIndex-1])
+    window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
 const validateAndNext = (e) => {
@@ -341,7 +347,10 @@ const goToNextStep = ()=>{
     "test-cases",
     "examples",
     ];
+    
     const CurrentPageIndex = pageOrder.indexOf(currentPage)
+    const percent = Math.round(((CurrentPageIndex+1) / (pageOrder.length - 1)) * 100);
+    setprogress(percent);
      if(CurrentPageIndex == 3)
     {
     
@@ -350,6 +359,7 @@ const goToNextStep = ()=>{
 
 
     setcurrentPage(pageOrder[CurrentPageIndex+1])
+    window.scrollTo({ top: 0, behavior: "smooth" });
 }
 const gotoHome = ()=>{
     navigator("/Instructor/Dashboard");
@@ -433,7 +443,7 @@ const updateBaseWidth = () => {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             <div className="bg-white rounded-lg border border-purple-100 overflow-hidden">
-            {/* <StepProgress progress= {progress} /> */}
+            <StepProgress progress= {progress} />
             { 
             RenderForm(currentPage)
             }
