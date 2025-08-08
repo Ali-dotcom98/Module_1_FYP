@@ -405,7 +405,7 @@ const updateBaseWidth = () => {
 
     return (
     <div className="container mx-auto font-urbanist">
-        <div className="flex items-center justify-between gap-5 bg-white rounded-lg border border-purple-100py-3 px-4 mb-4 py-3 mt-4">
+        <div className="flex items-center justify-between gap-5 bg-white rounded-lg border border-purple-100 py-3 px-4 mb-4 py-3 mt-4">
         
         <div className="flex items-center gap-4">
             <button

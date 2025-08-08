@@ -12,6 +12,7 @@
 import EditChallenge from './Pages/Instructor/EditChallenge'
 import EditChallengeLayout from './Layouts/Instructor/EditChallengeLayout'
 import CodeEditor from './Pages/Students/CodeEditor'
+import CodeingEnvironment from './Pages/Students/CodeingEnvironment'
   const App = () => {
       
     return (
@@ -44,7 +45,7 @@ import CodeEditor from './Pages/Students/CodeEditor'
                 <Route path='Dashboard' element={<StudentDashboard/>}/>
               </Route>
               <Route path='/Student/Editor/:ChallengeID' element={
-                  <CodeEditor/>
+                  <CodeingEnvironment/>
                 }/>
 
           </Routes>
