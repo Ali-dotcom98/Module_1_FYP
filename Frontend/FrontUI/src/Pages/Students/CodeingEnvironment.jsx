@@ -14,8 +14,6 @@ const CodeingEnvironment = () => {
   const fetchCompetitonDetail = async()=>{
     try {
       const response = await AxiosInstance.get(API_PATHS.CHALLENGE.GET_BY_ID(ChallengeID));
-      console.log("response",response);
-      
       if(response.data)
       {
         setCompetitonDetail(response.data);
@@ -34,7 +32,9 @@ const CodeingEnvironment = () => {
         
 
       <main className="">
-        <OnlineCompiler />
+        <OnlineCompiler
+          ProblemDetail = {CompetitonDetail}
+        />
       </main>
         
       </div>

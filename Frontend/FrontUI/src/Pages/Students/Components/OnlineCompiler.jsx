@@ -6,9 +6,10 @@ import InputSection from './InputSection';
 import { runCode } from '../utils/codeExecution';
 import { Check, Play, Info, RefreshCw } from 'lucide-react';
 import { toast } from 'react-toastify';
+import RenderFrom from '../../Instructor/RenderForm/RenderFrom';
 
 
-const OnlineCompiler = () => {
+const OnlineCompiler = ({ProblemDetail}) => {
   const [code, setCode] = useState('');
   const [output, setOutput] = useState('');
   const [input, setInput] = useState('');
@@ -109,6 +110,7 @@ int main() {
   return (
     <>
       <div className="font-urbanist grid grid-cols-1 md:grid-cols-2">
+        {/* Left Sider Column */}
         <div className="col-span-1">
           <div className="flex items-center justify-between gap-5 bg-white rounded-lg border border-purple-100 py-3 px-4 mb-4 mt-4">
             <LanguageSelector 
@@ -142,12 +144,31 @@ int main() {
             />
           </div>
         </div>
-         <div className="col-span-1">
+
+        {/* Right Side Column */}
+         <div className="col-span-1 bg-white ">
+              
+              {/* Header */}
               <div className="flex items-center justify-between gap-5 bg-white rounded-lg border border-purple-100 py-3 px-4 mb-4 mt-4">
-                Problem
+                <h1>
+                  {ProblemDetail.Question}
+                </h1>
+                <div className='flex gap-4'>
+                  <button className='btn-small-light '>
+                    {ProblemDetail.duration} Min  Remaining
+                  </button>
+                  <button className='btn-small' >
+                    Submit
+                  </button>
+                </div>
               </div>
-              <div className=''>
-                    <div className='border min-h-[537px]'>Description</div>
+              {/* ProblemSummary */}
+              <div className='bg-white rounded-lg border border-purple-100  overflow-y-scroll overflow-x-hidden'>
+                  <h2 className="text-lg font-bold text-gray-900 px-5 py-3">{ProblemDetail.Question}</h2>
+                  <div className='h-[90vh]'>
+                    <RenderFrom data={ProblemDetail} containerWidth={650} status={"Student"}/>
+
+                  </div>
               </div>
         </div>
       </div>
