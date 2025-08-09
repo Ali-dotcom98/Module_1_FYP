@@ -18,7 +18,10 @@ const CodeBlock = ({ code }) => (
 );
 const RenderFrom = ({data , containerWidth ,status}) => {
     const [showAllTests, setShowAllTests] = useState(false);
-    const displayedTests = showAllTests ? data.testCases : data.testCases.slice(0, 2);
+const displayedTests = showAllTests
+  ? (data?.testCases || [])
+  : (data?.testCases?.slice(0, 2) || []);
+
 
     const DEFAULT_THEME =status ?["#F5F4FF", "#E0DBFF", "#C9C2F8", "#8579D1", "#4B4B5C"]: ["#EBFDFF", "#A1F4FD", "#CEFAFE", "#00B8DB", "#4A5565"];
      const resumeRef = useRef(null);
@@ -88,7 +91,7 @@ const RenderFrom = ({data , containerWidth ,status}) => {
                 <div className='grid grid-cols-4 gap-4 '>
                     <div className='col-span-2'>
                         <Title text="Examples" color={DEFAULT_THEME[1]} status={status} />
-                        {data.examples.map((ex, idx) => (
+                        {data?.examples?.map((ex, idx) => (
                             <div key={ex._id || idx} className={`mb-2 ${status ?"text-md":"text-sm"}`}>
                             <div><span className="font-semibold">Input:</span> <CodeBlock code={ex.input} /></div>
                             <div><span className="font-semibold">Output:</span> <CodeBlock code={ex.output} /></div>
@@ -98,7 +101,7 @@ const RenderFrom = ({data , containerWidth ,status}) => {
                    <div className="col-span-2">
                         <Title text="TestCases" color={DEFAULT_THEME[1]}  status={status}/>
 
-                        {displayedTests.map((ex, idx) => (
+                        {displayedTests?.map((ex, idx) => (
                             <div key={ex._id || idx} className={`mb-2 ${status ?"text-md":"text-sm"}`}>
                             <div>
                                 <span className="font-semibold">Input:</span>{' '}
@@ -110,7 +113,7 @@ const RenderFrom = ({data , containerWidth ,status}) => {
                             </div>
                             </div>
                         ))}
-                        {data.testCases.length > 2 && (
+                        {data?.testCases?.length > 2 && (
                             <button
                             onClick={() => setShowAllTests(!showAllTests)}
                             className="mt-2 text-xs text-blue-600 hover:underline"
@@ -125,7 +128,7 @@ const RenderFrom = ({data , containerWidth ,status}) => {
                         <div className="w-full col-span-2 ">
                             <Title text="Tags" color={DEFAULT_THEME[1]} status={status}/>
                             <div className="flex flex-row items-center flex-wrap gap-3">
-                                {data.tags.map((tag, index) => {
+                                {data?.tags?.map((tag, index) => {
                                 if (!tag) return null;
                                 return (
                                     <div

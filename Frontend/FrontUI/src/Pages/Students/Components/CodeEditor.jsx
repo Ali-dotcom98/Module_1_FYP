@@ -14,15 +14,15 @@ const CodeEditor = ({ code, setCode, language }) => {
   };
 
   return (
-    <div className="h-full flex flex-col border-r border-border_Col">
-      <div className="bg-slate-900  px-4 py-2 flex items-center border-b border-border_Col opacity-70">
-        <Code className="h-4 w-4 text-slate-400 mr-2" />
-        <span className="text-sm font-medium text-slate-300">Source Code</span>
+    <div className="h-full flex flex-col bg-white rounded-lg border border-purple-100">
+      <div className="text-lg font-bold text-gray-900 px-5 py-3 flex bg-purple-200 rounded-tr rounded-tl">
+        <Code className="h-4 w-4 mr-2" />
+        <span className="text-sm ">Source Code</span>
       </div>
 
-      <div className="flex-grow">
+      <div className="flex-grow rounded-b">
         <Editor
-          height="500px"
+          height="550px"
           language={getEditorLanguage()}
           theme="vs-light"
           value={code}
