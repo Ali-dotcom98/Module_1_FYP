@@ -1,39 +1,47 @@
+const { Mongoose } = require("mongoose");
 const mongoose = require("mongoose");
 const submissionSchema = new mongoose.Schema({
-    challenge: {
+    challengeID: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Challenge',
         required: true
     },
-    student: {
+    studentID: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true
     },
     code: {
         type: String,
-        required: true
     },
     language: {
-        type: String,
-        enum: ['javascript', 'python', 'cpp', 'java'],
-        required: true
+        type: String
     },
+
     result: {
         type: String,
-        default: 'pending'
+        enum: ["Passed", "Failed", "Eliminated", "Pending"],
+        default: 'Pending'
     },
-    passedTestCases: {
-        type: Number,
-        default: 0
-    },
-    totalTestCases: {
-        type: Number,
-        default: 0
-    },
-    executionTime: Number, // in milliseconds
-    memoryUsed: Number, // optional, in KB
-    errorMessage: String // if any
+    testCases: [
+        {
+            input: { type: mongoose.Schema.Types.Mixed },
+            expectedOutput: { type: mongoose.Schema.Types.Mixed }
+        }
+    ],
+    DetailTestCases: [
+        {
+            input: { type: String },
+            expected: { type: String },
+            output: { type: String },
+            status: { type: String },
+            time: { type: Number },
+            memory: { type: Number },
+
+        }
+    ],
 }, { timestamps: true });
 
 const Submission = mongoose.model("Submission", submissionSchema)
+
+module.exports = Submission

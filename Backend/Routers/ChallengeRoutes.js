@@ -18,6 +18,7 @@ route.post("/Create", Protect, async (req, res) => {
             difficulty: "Easy",
             language: [""],
             startTime: "",
+            endTime: "",
             duration: "",
             tags: "",
             isPublic: false,
@@ -67,12 +68,28 @@ route.get("/GetAll", Protect, async (req, res) => {
     }
 })
 
+route.get("/GetAllWithPublic", Protect, async (req, res) => {
+    try {
+        const status = req.user.status;
+        console.log(status);
+
+        if (status == "Instrutor")
+            return res.status(401).json({ message: "Instrutor are Not Allowed" })
+
+        const NumberOfChallengeCreated = await Challenge_Model.find({ isPublic: true })
+        if (!NumberOfChallengeCreated)
+            return res.send("Looks like no challenges have been created yet!")
+        res.send(NumberOfChallengeCreated)
+    } catch (error) {
+        res.status(500).json({ message: "Internal Server Error", error: error.message });
+    }
+})
 route.get("/GetAll/:id", Protect, async (req, res) => {
     try {
         const ChallengeID = req.params.id;
         const status = req.user.status;
-        if (status == "Student")
-            return res.status(401).json({ message: "Student are Not Allowed" })
+        // if (status == "Student")
+        //     return res.status(401).json({ message: "Student are Not Allowed" })
 
         const NumberOfChallengeCreated = await Challenge_Model.findOne({ _id: ChallengeID })
         if (!NumberOfChallengeCreated)

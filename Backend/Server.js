@@ -6,6 +6,7 @@ const Challenge_Model = require("./Models/Challenge_Model");
 const path = require("path")
 const AuthRoutes = require("./Routers/AuthRoutes")
 const Challenge = require("./Routers/ChallengeRoutes");
+const SubmissionRoutes = require("./Routers/SubmissionRoutes")
 
 const { ConnectDb } = require("./DataBase/ConnectDB");
 const Cors = require("cors")
@@ -20,6 +21,7 @@ app.use(Cors({
 
 app.use("/Auth", AuthRoutes);
 app.use("/Chlg", Challenge);
+app.use("/Code", SubmissionRoutes);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads'),
     {
         setHeaders: (res, path) => {

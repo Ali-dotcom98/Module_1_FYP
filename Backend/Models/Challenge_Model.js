@@ -33,6 +33,7 @@ const challengeSchema = new mongoose.Schema({
         enum: ["Easy", "Medium", "Hard"],
         default: "Easy"
     },
+
     language: {
         type: [String],
         default: ["javascript"]
@@ -40,6 +41,9 @@ const challengeSchema = new mongoose.Schema({
     startTime: {
         type: Date,
 
+    },
+    endTime: {
+        type: Date,
     },
     duration: {
         type: Number,
