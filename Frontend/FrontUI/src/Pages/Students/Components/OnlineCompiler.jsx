@@ -144,21 +144,21 @@ const handleSubmit = ()=>{
   alert("Submit")
 }
 
-  // useEffect(() => {
-  //   const handleVisibilityChange = () => {
-  //     if (document.visibilityState === "hidden") {
-  //       handleCheating();
-  //     }
-  //   };
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "hidden") {
+        handleCheating();
+      }
+    };
 
-  //   document.addEventListener("visibilitychange", handleVisibilityChange);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
    
 
-  //   return () => {
-  //     document.removeEventListener("visibilitychange", handleVisibilityChange);
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
       
-  //   };
-  // }, []);
+    };
+  }, []);
 
 useEffect(() => {
   const handleBeforeUnload = (event) => {
@@ -176,7 +176,7 @@ useEffect(() => {
 
 useEffect(() => {
   if (ProblemDetail?.duration) {
-    setTimeLeft(ProblemDetail.duration * 1); 
+    setTimeLeft(ProblemDetail.duration * 60); 
   }
 }, [ProblemDetail]);
 
@@ -260,8 +260,8 @@ useEffect(() => {
         </div>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-2 px-3 mt-3 mb-2">
-          {/* <div className='col-span-1'><InputSection input={input} setInput={setInput} /></div> */}
-          <div className='col-span-2'><OutputSection output={output} status={status} /></div>
+          <div className='col-span-1'><InputSection input={input} setInput={setInput} /></div>
+          <div className='col-span-1'><OutputSection output={output} status={status} /></div>
         </div>
     </>
   );

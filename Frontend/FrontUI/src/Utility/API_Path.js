@@ -16,6 +16,14 @@ export const API_PATHS = {
         DELETE: (id) => `/Chlg/Delete/${id}`,
         UPLOAD_IMAGES: (id) => `/Chlg/${id}/upload-image`
     },
+    CODE: {
+        CREATE: "/Code/Create",
+        GET_ALL_BY_INSTRUCTOR: "/Code/GetAllByInstructor",
+        GET_ALL_BY_STUDENT: `/Code/StudentSubmission`,
+        GET_PUBLIC_CHALLENGE: "/Code/Chlg/GetAllWithPublic",
+        UPDATE: (id) => `/Code/Update/:id/${id}`,
+        DELETE: (id) => `/Code/Delete/:id/${id}`,
+    },
 
     IMAGE: {
         UPLOAD_IMAGE: "/Auth/uploadImg"

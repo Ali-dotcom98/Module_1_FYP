@@ -13,6 +13,8 @@ import EditChallenge from './Pages/Instructor/EditChallenge'
 import EditChallengeLayout from './Layouts/Instructor/EditChallengeLayout'
 import CodeEditor from './Pages/Students/CodeEditor'
 import CodeingEnvironment from './Pages/Students/CodeingEnvironment'
+import MyPerformance from './Pages/Students/MyPerformance'
+import Leaderboard from './Pages/Students/Leaderboard'
   const App = () => {
       
     return (
@@ -43,6 +45,8 @@ import CodeingEnvironment from './Pages/Students/CodeingEnvironment'
                 }
                 >
                 <Route path='Dashboard' element={<StudentDashboard/>}/>
+                <Route path='Performance' element={<MyPerformance/>}/>
+                <Route path='Leaderboard' element={<Leaderboard/>}/>
               </Route>
               <Route path='/Student/Editor/:ChallengeID' element={
                   <CodeingEnvironment/>

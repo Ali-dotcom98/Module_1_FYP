@@ -57,13 +57,13 @@ export const SIDE_MENU_DATA_User = [
         id: "02",
         label: "My Performance",
         icon: LuClipboardCheck,
-        path: "/user/tasks",
+        path: "/Student/Performance",
     },
     {
         id: "03",
         label: "LeaderBoard ",
         icon: LucideBarChart2,
-        path: "/user/tasks",
+        path: "/Student/Leaderboard",
     },
     {
         id: "03",

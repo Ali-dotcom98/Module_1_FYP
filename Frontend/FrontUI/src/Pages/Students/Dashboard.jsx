@@ -33,12 +33,12 @@ const Dashboard = () => {
     navigator(`/Student/Editor/${ConfirmId}`)
   }
   return (
-    <div>
+    <div className=' px-4'>
       <Banner/>
       {/* {
         JSON.stringify(Data)
       } */}
-      <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mt-4 '>
+      <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mt-4'>
         {
           Data.map((item)=>{
           return ( 

@@ -48,7 +48,7 @@ const ChallengeCard  = ({
   return (
     <div className='font-urbanist bg-white rounded-xl py-4 shadow-md shadow-gray-100 border border-x-gray-200/50 cursor-pointer' 
     onClick={()=>onselect(ID)}>
-        <div className='flex items-end gap-3 px-4'>
+        <div className='flex items-end gap-3 '>
             <div className={`text-[11px] font-medium ${getpriority()} px-4 py-0.5 rounded`}>
                 {
                     priority 

@@ -42,7 +42,7 @@ const Banner = () => {
   ];
 
   return (
-    <div className="font-urbanist relative w-full max-w-6xl mx-auto px-4">
+    <div className="font-urbanist relative w-full max-w-6xl mx-auto">
       {/* Scrollable Banner Container */}
       <div className="relative">
         {/* Left arrow */}
@@ -69,7 +69,7 @@ const Banner = () => {
               <div className='relative z-20'>
                 <h3 className="text-lg font-semibold mt-3">{item.title}</h3>
                 <h4 className="text-md font-semibold">{item.subtitle}</h4>
-                <button className="bg-purple-200 font-medium text-black px-4 py-1 rounded shadow mt-3">
+                <button className="bg-purple-100 font-medium text-black px-4 py-1 rounded shadow mt-3">
                   {item.button}
                 </button>
               </div>
