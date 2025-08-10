@@ -16,6 +16,7 @@ const languageMap = {
     cpp: 54,
     java: 62,
     javascript: 63
+
 };
 
 router.post("/Create", Protect, async (req, res) => {
@@ -72,7 +73,7 @@ router.delete("/Delete/:id", Protect, async (req, res) => {
 
 })
 
-router.get("/GetAllByInstructor/:id", Protect, async (req, res) => {
+router.get("/GetAllByInstructor", Protect, async (req, res) => {
     try {
         const Status = req.user.status;
         if (Status == "Student")
@@ -95,7 +96,7 @@ router.get("/GetAllByInstructor/:id", Protect, async (req, res) => {
 
 router.get("/StudentSubmission", Protect, async (req, res) => {
     try {
-        const response = await Submission_Model.find({ studentID: req.user._id });
+        const response = await Submission_Model.find({ studentID: req.user._id }).populate("challengeID");
         if (!response || response.length == 0)
             return res.status(404).json({ message: "No submissions found" });
 
