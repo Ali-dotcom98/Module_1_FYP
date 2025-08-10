@@ -25,6 +25,8 @@ router.post("/Create", Protect, async (req, res) => {
             code: "",
             result: "Pending",
             language: "",
+            totalTestCase: 0,
+            totalTestCaseClear: 0,
             testCases: [
                 {
                     input: null,
@@ -115,11 +117,14 @@ const HandleTestcases = async (code, language, testCases) => {
         for (const tc of testCases) {
             // Normalize input
             let stdinValue;
-            if (typeof tc.input === "string") {
-                stdinValue = JSON.parse(tc.input);
+            if (Array.isArray(tc.input)) {
+                // Join array items with newlines (Judge0 reads multiple lines this way)
+                stdinValue = tc.input.join("\n");
             } else {
-                stdinValue = JSON.stringify(tc.input);
+                // Use the string as-is
+                stdinValue = String(tc.input);
             }
+
 
             // Normalize expected output as string (trimmed)
             const expectedOutput = String(tc.expectedOutput).trim();
@@ -163,30 +168,40 @@ const HandleTestcases = async (code, language, testCases) => {
 
 router.put("/Update/:id", Protect, async (req, res) => {
     try {
-        const Submission = await Submission_Model.findOne({ _id: req.params.id })
-        if (!Submission)
+        let submission = await Submission_Model.findById(req.params.id);
+
+        if (!submission) {
             return res.status(404).json({ message: "No submissions found" });
-        Object.assign(Submission, req.body);
+        }
+        Object.assign(submission, req.body);
+        const { code, language, testCases } = submission;
+        if (submission.result == "Eliminated") {
+            await submission.save();
+        }
+        else {
+            const getSubmissionResult = await HandleTestcases(code, language, testCases);
+            if (getSubmissionResult) {
+                submission.DetailTestCases = getSubmissionResult;
+            }
 
-        Submission.save();
-        const { code, language, testCases } = Submission
-        const GetSubmissionResult = await HandleTestcases(code, language, testCases);
+            const TestCasePassed = getSubmissionResult.filter((item) => item.status == "Accepted").length;
+            const TotalCase = getSubmissionResult.length;
+            const result = TestCasePassed >= 1 ? "Passed" : "Failed"
 
-        res.send(GetSubmissionResult)
+            submission.result = result || submission.result
+            submission.totalTestCaseClear = TestCasePassed
+            submission.totalTestCase = TotalCase || submission.totalTestCase
 
-        // const ConfirmSubmission = await Submission_Model.findOne({ _id: req.params.id })
+            await submission.save();
+        }
+        res.json(submission);
 
-        // ConfirmSubmission.DetailTestCases = ConfirmSubmission :
-
-        // res.send(Submission)
-
-
-    }
-    catch (error) {
+    } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Internal Server Error" });
     }
-})
+});
+
 
 
 

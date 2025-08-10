@@ -23,6 +23,8 @@ const submissionSchema = new mongoose.Schema({
         enum: ["Passed", "Failed", "Eliminated", "Pending"],
         default: 'Pending'
     },
+    totalTestCaseClear: { type: Number },
+    totalTestCase: { type: Number },
     testCases: [
         {
             input: { type: mongoose.Schema.Types.Mixed },
@@ -31,8 +33,8 @@ const submissionSchema = new mongoose.Schema({
     ],
     DetailTestCases: [
         {
-            input: { type: String },
-            expected: { type: String },
+            input: { type: mongoose.Schema.Types.Mixed },
+            expected: { type: mongoose.Schema.Types.Mixed },
             output: { type: String },
             status: { type: String },
             time: { type: Number },
