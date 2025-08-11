@@ -9,7 +9,8 @@ import { API_PATHS } from '../../Utility/API_Path';
 const CodeingEnvironment = () => {
   const {ChallengeID} = useParams();
   const [CompetitonDetail, setCompetitonDetail] = useState({})
-  console.log("CompetitonDetail",CompetitonDetail);
+  const [ActualSubmission, setActualSubmission] = useState({})
+  
   
   const fetchCompetitonDetail = async()=>{
     try {
@@ -22,18 +23,36 @@ const CodeingEnvironment = () => {
       console.log(error);
     }
   }
+
+  const CreatSubmission = async()=>{
+  try {
+    const response = await AxiosInstance.post(API_PATHS.CODE.CREATE , {ChallengeID : ChallengeID})
+    if(response.data)
+        setActualSubmission(response.data)
+  } catch (error) {
+    console.log(error);
+    
+  }
+}
   useEffect(()=>{
     fetchCompetitonDetail();
   },[])
 
- return (
+  useEffect(()=>{
+    CreatSubmission();
+  },[])
+
+
+
+return (
     <>
       <div className=" min-h-screen rounded-[6px] ">
         
 
       <main className="">
         <OnlineCompiler
-          ProblemDetail = {CompetitonDetail}
+          CompetitonDetail = {CompetitonDetail}
+          ActualSubmissionData ={ActualSubmission}
         />
       </main>
         

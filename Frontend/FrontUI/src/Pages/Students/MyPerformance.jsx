@@ -83,8 +83,8 @@ const MyPerformance = () => {
                             </div>
                         </div >
                         <div className='text-xs text-gray-500 flex items-center justify-between py-2'>
-                            <p className='text-[13px] font-medium text-gray-900'>Memory Used: {item.DetailTestCases[0].memory}</p>
-                            <p className='text-[13px] font-medium text-gray-900'>Execution Time: {item.DetailTestCases[0].time}</p>
+                            <p className='text-[13px] font-medium text-gray-900'>Memory Used: {item.DetailTestCases[0]?.memory}</p>
+                            <p className='text-[13px] font-medium text-gray-900'>Execution Time: {item.DetailTestCases[0]?.time}</p>
                         </div>
                     </div>
                    {

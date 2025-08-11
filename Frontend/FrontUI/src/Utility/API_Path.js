@@ -21,7 +21,7 @@ export const API_PATHS = {
         GET_ALL_BY_INSTRUCTOR: "/Code/GetAllByInstructor",
         GET_ALL_BY_STUDENT: `/Code/StudentSubmission`,
         GET_PUBLIC_CHALLENGE: "/Code/Chlg/GetAllWithPublic",
-        UPDATE: (id) => `/Code/Update/:id/${id}`,
+        UPDATE: (id) => `/Code/Update/${id}`,
         DELETE: (id) => `/Code/Delete/:id/${id}`,
     },
 

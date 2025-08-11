@@ -7,9 +7,13 @@ import { runCode } from '../utils/codeExecution';
 import { Check, Play, Info, RefreshCw } from 'lucide-react';
 import { toast } from 'react-toastify';
 import RenderFrom from '../../Instructor/RenderForm/RenderFrom';
+import AxiosInstance from "../../../Utility/AxiosInstance"
+import { API_PATHS } from '../../../Utility/API_Path';
+import {useNavigate} from 'react-router-dom'
 
 
-const OnlineCompiler = ({ProblemDetail}) => {
+const OnlineCompiler = ({CompetitonDetail , ActualSubmissionData}) => { 
+  const navigator = useNavigate();
   const [code, setCode] = 
     useState(`
       #include <iostream>
@@ -29,7 +33,65 @@ const OnlineCompiler = ({ProblemDetail}) => {
   const [cheatCount, setCheatCount] = useState(0);
   const minutes = Math.floor(timeLeft / 60);
   const seconds = timeLeft % 60;
+
+  const [SubmissionForm, setSubmissionForm] = useState({})
   
+  
+  
+
+  // console.log("CompetitonDetail",CompetitonDetail);
+  // console.log("Submission", ActualSubmissionData);
+
+  useEffect(()=>{
+    if(ActualSubmissionData)
+      setSubmissionForm(ActualSubmissionData)
+  },[CompetitonDetail])
+  
+  useEffect(() => {
+  if (CompetitonDetail.testCases) {
+    setSubmissionForm(prev => ({
+      ...prev,
+      testCases: [...CompetitonDetail?.testCases] || prev?.testCases
+    }));
+  }
+}, [CompetitonDetail]);
+
+console.log("SubmissionForm",SubmissionForm);
+
+
+  const updateSection = (key , value)=>{
+    setSubmissionForm((prev)=>({
+      ...prev,
+      [key]: value
+    }))
+  }
+
+
+const handleSubmit = async()=>{
+  try {
+    const response = await AxiosInstance.put(API_PATHS.CODE.UPDATE(SubmissionForm?._id) , SubmissionForm);
+    if(response)
+    {
+      toast.success("Submission Successfully");
+      navigator("/Student/Dashboard")
+    }
+
+  } catch (error) {
+    toast.error("Issue")
+    console.log(error);
+    
+  }
+}
+
+
+
+
+
+
+
+
+
+
 
   const setBoilerCode = (label) => {
   switch (label) {
@@ -140,60 +202,60 @@ const handleCheating = () => {
     });
   };
 
-const handleSubmit = ()=>{
-  alert("Submit")
-}
 
-  useEffect(() => {
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === "hidden") {
-        handleCheating();
-      }
-    };
 
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-   
 
-    return () => {
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
-      
-    };
-  }, []);
+
+// useEffect(() => {
+//   const handleVisibilityChange = () => {
+//     if (document.visibilityState === "hidden") {
+//       handleCheating();
+//     }
+//   };
+
+//   document.addEventListener("visibilitychange", handleVisibilityChange);
+  
+
+//   return () => {
+//     document.removeEventListener("visibilitychange", handleVisibilityChange);
+    
+//   };
+// }, []);
+
+// useEffect(() => {
+//   const handleBeforeUnload = (event) => {
+//     event.preventDefault();
+//     alert("Are you sure you want to leave? Your progress will be lost.")
+
+//   };
+
+//   window.addEventListener("beforeunload", handleBeforeUnload);
+
+//   return () => {
+//     window.removeEventListener("beforeunload", handleBeforeUnload);
+//   };
+// }, []);
 
 useEffect(() => {
-  const handleBeforeUnload = (event) => {
-    event.preventDefault();
-    alert("Are you sure you want to leave? Your progress will be lost.")
-
-  };
-
-  window.addEventListener("beforeunload", handleBeforeUnload);
-
-  return () => {
-    window.removeEventListener("beforeunload", handleBeforeUnload);
-  };
-}, []);
-
-useEffect(() => {
-  if (ProblemDetail?.duration) {
-    setTimeLeft(ProblemDetail.duration * 60); 
+  if (CompetitonDetail?.duration) {
+    setTimeLeft(CompetitonDetail.duration * 60); 
   }
-}, [ProblemDetail]);
+}, [CompetitonDetail]);
 
-useEffect(() => {
-  if (timeLeft === null) return; 
+// useEffect(() => {
+//   if (timeLeft === null) return; 
 
-  if (timeLeft <= 0) {
-    handleSubmit();
-    return;
-  }
+//   if (timeLeft <= 0) {
+//     handleSubmit();
+//     return;
+//   }
 
-  const timer = setInterval(() => {
-    setTimeLeft(prev => prev - 1);
-  }, 1000);
+//   const timer = setInterval(() => {
+//     setTimeLeft(prev => prev - 1);
+//   }, 1000);
 
-  return () => clearInterval(timer);
-}, [timeLeft]);
+//   return () => clearInterval(timer);
+// }, [timeLeft]);
   return (
     <>
       <div className="font-urbanist grid grid-cols-1 md:grid-cols-2 gap-2 px-3">
@@ -202,7 +264,10 @@ useEffect(() => {
           <div className="flex items-center justify-between gap-5 bg-white rounded-lg border border-purple-100 py-3 px-4 mb-4 mt-4">
             <LanguageSelector 
             selectedLanguageId={languageId} 
-            onLanguageChange={handleLanguageChange} 
+            onLanguageChange={handleLanguageChange}
+            updateSection= {updateSection}
+            
+            
             />
             <h2 className="text-lg  font-semibold text-gray-900">Code Ascends Compiler</h2>
             <div className="flex items-center gap-4">
@@ -226,7 +291,13 @@ useEffect(() => {
           <div className="col-span-1">
             <CodeEditor 
               code={code} 
-              setCode={setCode} 
+              setCode={(Value)=>{
+                setCode(Value),
+                setSubmissionForm((prev)=>({
+                  ...prev,
+                  code : Value
+                }))
+              }} 
               language={languageLabel.toLowerCase()} 
             />
           </div>
@@ -238,22 +309,22 @@ useEffect(() => {
               {/* Header */}
               <div className="flex items-center justify-between gap-5 bg-white rounded-lg border border-purple-100 py-3 px-4 mb-4 mt-4">
                 <h1 className='className="text-lg  font-semibold text-gray-900"'>
-                  {ProblemDetail.Question}
+                  {CompetitonDetail.Question}
                 </h1>
                 <div className='flex gap-4'>
                   <button className="btn-small-light  ">
                     <span className=' min-w-10'>{minutes}:{seconds < 10 ? `0${seconds}` : seconds}</span> Remaining 
                   </button>
-                  <button className='btn-small' >
+                  <button className='btn-small' onClick={handleSubmit} >
                     Submit
                   </button>
                 </div>
               </div>
               {/* ProblemSummary */}
               <div className='bg-white rounded-lg border border-purple-100  overflow-y-scroll overflow-x-hidden'>
-                  <h2 className="text-lg font-bold text-gray-900 px-5 py-3">{ProblemDetail.Question}</h2>
+                  <h2 className="text-lg font-bold text-gray-900 px-5 py-3">{CompetitonDetail.Question}</h2>
                   <div className='h-[90vh]'>
-                    <RenderFrom data={ProblemDetail} containerWidth={650} status={"Student"}/>
+                    <RenderFrom data={CompetitonDetail} containerWidth={650} status={"Student"}/>
 
                   </div>
               </div>

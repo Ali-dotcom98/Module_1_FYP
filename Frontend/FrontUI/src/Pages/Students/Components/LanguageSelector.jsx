@@ -8,7 +8,7 @@ const languages = [
   { id: 54, name: 'C', icon: 'C' },
 ];
 
-const LanguageSelector = ({ selectedLanguageId, onLanguageChange }) => {
+const LanguageSelector = ({ selectedLanguageId, onLanguageChange , updateSection  }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const selectedLanguage = languages.find((lang) => lang.id === selectedLanguageId) || languages[0];
@@ -36,6 +36,7 @@ const LanguageSelector = ({ selectedLanguageId, onLanguageChange }) => {
                 key={language.id}
                 onClick={() => {
                   onLanguageChange(language.id, language.name);
+                  updateSection("language", language.name );
                   setIsOpen(false);
                 }}
                 className={`flex items-center gap-2 px-3 py-2 text-sm cursor-pointer ${

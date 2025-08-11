@@ -61,6 +61,7 @@ const EditChallenge = () => {
     console.log(DefaultChlng);
     
 
+    
 const fetchChallengeDetailsById = async () => {
   try {
     const response = await AxiosInstance.get(API_PATHS.CHALLENGE.GET_BY_ID(ChallengeID));
