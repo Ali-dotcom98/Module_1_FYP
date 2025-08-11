@@ -15,13 +15,16 @@ const languageMap = {
     python: 71,
     cpp: 54,
     java: 62,
-    javascript: 63
+    javascript: 63,
+    Java: 62,
 
 };
 
 router.post("/Create", Protect, async (req, res) => {
     try {
         const { ChallengeID } = req.body;
+        console.log('Here');
+
         const DefaultSubmission = {
             code: "",
             result: "Pending",
@@ -96,7 +99,12 @@ router.get("/GetAllByInstructor", Protect, async (req, res) => {
 
 router.get("/StudentSubmission", Protect, async (req, res) => {
     try {
-        const response = await Submission_Model.find({ studentID: req.user._id }).populate("challengeID");
+        const response = await Submission_Model.find({
+            studentID: req.user._id,
+            result: { $ne: "Pending" }
+        }).populate("challengeID");
+        console.log(response);
+
         if (!response || response.length == 0)
             return res.status(404).json({ message: "No submissions found" });
 
@@ -109,6 +117,10 @@ router.get("/StudentSubmission", Protect, async (req, res) => {
 
 const HandleTestcases = async (code, language, testCases) => {
     try {
+        console.log("code", code);
+        console.log("language", language);
+        console.log("testCases", testCases);
+
         if (!languageMap[language]) {
             throw new Error("Language not supported");
         }
@@ -116,18 +128,15 @@ const HandleTestcases = async (code, language, testCases) => {
         const results = [];
 
         for (const tc of testCases) {
-            // Normalize input
+            // Normalize input into a single string for Judge0
             let stdinValue;
             if (Array.isArray(tc.input)) {
-                // Join array items with newlines (Judge0 reads multiple lines this way)
-                stdinValue = tc.input.join("\n");
+                stdinValue = tc.input.map(v => String(v).trim()).join("\n");
             } else {
-                // Use the string as-is
-                stdinValue = String(tc.input);
+                stdinValue = String(tc.input).trim();
             }
 
-
-            // Normalize expected output as string (trimmed)
+            // Normalize expected output
             const expectedOutput = String(tc.expectedOutput).trim();
 
             const submission = await axios.post(
@@ -167,6 +176,7 @@ const HandleTestcases = async (code, language, testCases) => {
 
 
 
+
 router.put("/Update/:id", Protect, async (req, res) => {
     try {
         let submission = await Submission_Model.findById(req.params.id);
@@ -176,6 +186,7 @@ router.put("/Update/:id", Protect, async (req, res) => {
         }
         Object.assign(submission, req.body);
         const { code, language, testCases } = submission;
+
         if (submission.result == "Eliminated") {
             await submission.save();
         }

@@ -26,7 +26,7 @@ route.post("/Create", Protect, async (req, res) => {
             thumbnailLink: "",
             testCases: [
                 {
-                    input: "",
+                    input: null,
                     expectedOutput: "",
                 }
             ],

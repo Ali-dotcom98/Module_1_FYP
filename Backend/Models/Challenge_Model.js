@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const testCaseSchema = new mongoose.Schema({
     input: {
-        type: String,
+        type: mongoose.Schema.Types.Mixed
     },
     expectedOutput: {
         type: String,
