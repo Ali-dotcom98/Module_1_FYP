@@ -58,6 +58,10 @@ const challengeSchema = new mongoose.Schema({
         type: [String],
         default: []
     },
+    attempt: {
+        type: Boolean,
+        default: false
+    },
     thumbnailLink: {
         type: String,
     },

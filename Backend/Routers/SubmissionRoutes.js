@@ -3,7 +3,8 @@ const express = require("express");
 const axios = require("axios");
 const { Protect } = require("../Middleware/Token_Middleware");
 const router = express.Router();
-const Submission_Model = require("../Models/Submission.js")
+const Submission_Model = require("../Models/Submission.js");
+const Challenge_Model = require("../Models/Challenge_Model.js");
 
 const JUDGE0_API = "https://judge0-ce.p.rapidapi.com";
 const RAPIDAPI_KEY = process.env.RAPIDAPI_KEY;
@@ -181,6 +182,7 @@ router.put("/Update/:id", Protect, async (req, res) => {
     try {
         let submission = await Submission_Model.findById(req.params.id);
 
+        const ChallengeId = submission.challengeID;
         if (!submission) {
             return res.status(404).json({ message: "No submissions found" });
         }
@@ -206,6 +208,10 @@ router.put("/Update/:id", Protect, async (req, res) => {
 
             await submission.save();
         }
+
+        const UpdateChallengeID = await Challenge_Model.findOne({ _id: ChallengeId });
+        UpdateChallengeID.attempt = true;
+        UpdateChallengeID.save();
         res.json(submission);
 
     } catch (error) {

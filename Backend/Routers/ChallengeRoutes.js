@@ -21,6 +21,7 @@ route.post("/Create", Protect, async (req, res) => {
             endTime: "",
             duration: "",
             tags: "",
+            attempt: false,
             isPublic: false,
             Question: "",
             thumbnailLink: "",
@@ -76,7 +77,7 @@ route.get("/GetAllWithPublic", Protect, async (req, res) => {
         if (status == "Instrutor")
             return res.status(401).json({ message: "Instrutor are Not Allowed" })
 
-        const NumberOfChallengeCreated = await Challenge_Model.find({ isPublic: true })
+        const NumberOfChallengeCreated = await Challenge_Model.find({ attempt: false })
         if (!NumberOfChallengeCreated)
             return res.send("Looks like no challenges have been created yet!")
         res.send(NumberOfChallengeCreated)
@@ -135,6 +136,40 @@ route.delete("/Delete/:id", Protect, async (req, res) => {
     }
 
 })
+
+route.delete("/DeleteList", Protect, async (req, res) => {
+    try {
+        const { DeletedArray } = req.body;
+        const status = req.user.status;
+
+        if (status === "Student") {
+            return res.status(401).json({
+                message: "Students are not allowed to delete challenges"
+            });
+        }
+
+        // Delete all in parallel
+        // const deleteResults = await Promise.all(
+        //     DeletedArray.map(id => Challenge_Model.findByIdAndDelete(id))
+        // );
+        for (const id of DeletedArray) {
+            await Challenge_Model.findByIdAndDelete(id);
+        }
+
+        res.json({
+            message: "Challenges deleted successfully"
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            message: "Internal Server Error",
+            error: error.message
+        });
+    }
+});
+
+
+
 
 route.put("/:id/upload-image", (req, res) => {
     try {
