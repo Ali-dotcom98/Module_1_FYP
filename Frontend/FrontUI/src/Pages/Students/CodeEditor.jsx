@@ -48,7 +48,7 @@ function CodeEditor() {
         <div className="col-span-1 row-span-2 bg-white">
           <Editor
             height="100%"
-            language={language}
+            language={language} 
             value={code[language]}
             theme="vs-dark"
             onChange={handleEditorChange}

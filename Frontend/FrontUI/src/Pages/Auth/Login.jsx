@@ -43,14 +43,15 @@ const Login = () => {
         const {user , token} = response.data    
         updateUser(user, token);
 
+
         if(user.status == "Instructor")
           navigate("/Instructor/Dashboard")
         else
           navigate("/Student/Dashboard")
     } catch (error) {
-        if(error.response && error.response.data.Message)
+        if(error.response && error.response.data.message)
         {
-            seterror(error.response.data.Message);
+            seterror(error.response.data.message);
         }
         else if(error.request){
             seterror("Server is Not Running");

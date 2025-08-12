@@ -15,6 +15,8 @@ import CodeEditor from './Pages/Students/CodeEditor'
 import CodeingEnvironment from './Pages/Students/CodeingEnvironment'
 import MyPerformance from './Pages/Students/MyPerformance'
 import Leaderboard from './Pages/Students/Leaderboard'
+import CreatChallengeForm from './Pages/Instructor/CreatChallengeForm'
+import ManagaCometition from './Pages/Instructor/ManagaCometition'
   const App = () => {
       
     return (
@@ -33,6 +35,7 @@ import Leaderboard from './Pages/Students/Leaderboard'
                 
                 >
                 <Route path='Dashboard' element={<Dashboard/>}/>
+                <Route path='Manage' element={<ManagaCometition/>}/>
               </Route>
               <Route path='/Instructor/Challenge/:ChallengeID' element={
                   <EditChallenge/>

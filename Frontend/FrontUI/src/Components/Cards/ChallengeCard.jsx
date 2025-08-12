@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
 
-const ChallengeCard = ({ imgurl, title, lastUpdated, onSelect }) => {  
+const ChallengeCard = ({ imgurl, title, lastUpdated, onSelect, DeletedArray , ID }) => {  
     
     return(
         <div
-            className="h-[300px] flex flex-col items-center justify-between bg-white rounded-lg border border-gray-200  cursor-pointer hover:border-purple-600 overflow-hidden transition"
+            className={`${DeletedArray ? DeletedArray?.includes(ID)?"border border-purple-600 ":"" : ""} h-[300px] flex flex-col items-center justify-between bg-white rounded-lg border border-gray-200  cursor-pointer hover:border-purple-600 overflow-hidden transition`}
             style={{backgroundColor: "rgb(246, 250, 250)"}}
             onClick={onSelect}
             >

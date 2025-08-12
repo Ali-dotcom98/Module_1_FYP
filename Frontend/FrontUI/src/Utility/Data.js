@@ -18,28 +18,24 @@ export const SIDE_MENU_DATA = [
         id: "01",
         label: "Dashboard",
         icon: LuLayoutDashboard,
-        path: "/admin/dashboard",
+        path: "/Instructor/Dashboard",
     },
+
     {
         id: "02",
         label: "Manage Tasks",
         icon: LuClipboardCheck,
-        path: "/admin/tasks",
+        path: "/Instructor/Manage",
     },
     {
         id: "03",
-        label: "Create Task",
-        icon: LuSquarePlus,
-        path: "/admin/create-task",
-    },
-    {
-        id: "04",
-        label: "Team Members",
-        icon: LuUsers,
+        label: "Leader Board",
+        icon: LucideBarChart2,
         path: "/admin/users",
     },
+
     {
-        id: "05",
+        id: "04",
         label: "Logout",
         icon: LuLogOut,
         path: "logout",

@@ -14,7 +14,9 @@ export const API_PATHS = {
         GET_PUBLIC_CHALLENGE: "/Chlg/GetAllWithPublic",
         UPDATE: (id) => `/Chlg/Update/${id}`,
         DELETE: (id) => `/Chlg/Delete/${id}`,
+        DELETE_LIST: "/Chlg/DeleteList",
         UPLOAD_IMAGES: (id) => `/Chlg/${id}/upload-image`
+
     },
     CODE: {
         CREATE: "/Code/Create",
