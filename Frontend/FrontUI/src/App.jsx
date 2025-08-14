@@ -17,6 +17,7 @@ import MyPerformance from './Pages/Students/MyPerformance'
 import Leaderboard from './Pages/Students/Leaderboard'
 import CreatChallengeForm from './Pages/Instructor/CreatChallengeForm'
 import ManagaCometition from './Pages/Instructor/ManagaCometition'
+import { ToastContainer } from 'react-toastify'
   const App = () => {
       
     return (
@@ -57,6 +58,11 @@ import ManagaCometition from './Pages/Instructor/ManagaCometition'
 
           </Routes>
         </Router>
+         <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          className={"mt-20 mr-7 "}
+        />
       
       </UserProvider>
       

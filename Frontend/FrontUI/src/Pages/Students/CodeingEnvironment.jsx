@@ -49,19 +49,14 @@ return (
       <div className=" min-h-screen rounded-[6px] ">
         
 
-      <main className="">
-        <OnlineCompiler
-          CompetitonDetail = {CompetitonDetail}
-          ActualSubmissionData ={ActualSubmission}
-        />
-      </main>
+        <main className="">
+          <OnlineCompiler
+            CompetitonDetail = {CompetitonDetail}
+            ActualSubmissionData ={ActualSubmission}
+          />
+        </main>
         
       </div>
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        className={"mt-20 mr-7 "}
-      />
 
     </>
   );
