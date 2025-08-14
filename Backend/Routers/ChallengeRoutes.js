@@ -129,6 +129,15 @@ route.put("/Update/:id", Protect, async (req, res) => {
     }
 })
 
+route.get("/GetLeaderBoardData", async (req, res) => {
+    try {
+        const data = await Challenge_Model.find({ endTime: { $lte: new Date() } })
+        res.send(data);
+    } catch (error) {
+        console.log(error);
+
+    }
+})
 
 route.delete("/Delete/:id", Protect, async (req, res) => {
     try {
