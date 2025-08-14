@@ -1,9 +1,12 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Input from '../../../Components/input'
 import { LuPlus, LuTrash2 } from 'react-icons/lu'
+import { formatYearMonth } from '../../../Utility/Helper'
 
-const FunctionSettingsForm = ({functionSignature,startTime,duration,isPublic,tags,updateSection ,endTime, AddItemInArray , removeArrayItem ,updateArrayItem}) => {
-  return (
+const FunctionSettingsForm = ({language,functionSignature,startTime,duration,isPublic,tags,updateSection ,endTime, AddItemInArray , removeArrayItem ,updateArrayItem , inputType , outputType , UpdateSectionPro}) => {
+    const [AddArray, setAddArray] = useState(false)
+
+    return (
     <div className="px-5 pt-5">
             <h2 className="text-lg  font-semibold text-gray-900">FunctionSettings</h2>
             <div className="mt-4">
@@ -20,7 +23,7 @@ const FunctionSettingsForm = ({functionSignature,startTime,duration,isPublic,tag
                     onchange={({ target }) => updateSection("startTime", target.value)}
                     />
                     <Input
-                    value={ endTime|| ""}
+                    value={endTime}
                     onchange={({ target }) => updateSection("endTime", target.value)}
                     label="endTime"
                     type="date"
@@ -51,6 +54,51 @@ const FunctionSettingsForm = ({functionSignature,startTime,duration,isPublic,tag
                         onChange={({ target }) => updateSection("functionSignature", target.value)}
                     />
                 </div>
+
+                {
+                    language != "Python" && (
+                        <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                     <div className='flex flex-col my-2 space-y-1.5'>
+                        <label htmlFor="" className="font-medium">ReturnType</label>
+                        <select  className='p-3 bg-slate-50 relative outline-none rounded-md' name="" value={outputType} onChange={({target})=>UpdateSectionPro("outputType", target.value)} id="">
+                            <option value="boolean++">Boolean</option>
+                            <option value="int">Integer</option>
+                            <option value="long">Long</option>
+                            <option value="String">String</option>
+
+                        </select>
+                    </div>
+                     <div className='flex flex-col my-2 space-y-1.5'>
+                        <div className='flex flex-row items-center justify-between'>
+                            <label htmlFor="" className="font-medium capitalize">Parameter Type</label>
+                            <div className='flex gap-4'>
+                                <label htmlFor="">Array</label>
+                                <input type="checkbox" checked={AddArray} onChange={()=>setAddArray((prev)=>!prev)} />
+                            </div>
+                        </div>
+                        {
+                            !AddArray ?(
+                                <select  className='p-3 bg-slate-50 relative outline-none rounded-md' name="" value={inputType} onChange={({target})=>UpdateSectionPro("inputType", target.value)} id="">
+                                    <option value="boolean">Boolean</option>
+                                    <option value="int">Integer</option>
+                                    <option value="long">Long</option>
+                                    <option value="String">String</option>
+
+                                </select>
+                            ):(
+                                <select  className='p-3 bg-slate-50 relative outline-none rounded-md' name="" value={inputType} onChange={({target})=>UpdateSectionPro("inputType", target.value)} id="">
+                                    <option value="boolean">Boolean</option>
+                                    <option value="int[]">Integer [ ] </option>
+                                    <option value="long[]">Long [ ]</option>
+                                    <option value="String[]">String [ ]</option>
+
+                                </select>
+                            )
+                        }
+                    </div>
+                </div>
+                    ) 
+                }
                  <div className="mt-4 flex flex-col gap-4 mb-3">
                     <h3 className="text-lg font-semibold text-gray-900">Tags</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4" >

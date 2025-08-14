@@ -39,6 +39,11 @@ const EditChallenge = () => {
         endTime:"",
         duration: "",
         Question:"",
+        defaultBoilercode: {
+            language: "",
+            inputType: "",
+            outputType: ""
+        },
         isPublic: null,
         testCases: [
             {
@@ -81,6 +86,7 @@ const fetchChallengeDetailsById = async () => {
         duration: challengeInfo?.duration || "",    
         isPublic: challengeInfo?.isPublic || false,
         testCases: challengeInfo?.testCases || prevState?.testCases,
+        defaultBoilercode : challengeInfo.defaultBoilercode || prevState.defaultBoilercode,
         tags: challengeInfo?.tags ||prevState?.tags,
         examples : challengeInfo?.examples || prevState?.examples,
         Question: challengeInfo.Question || prevState.Question
@@ -168,9 +174,11 @@ const RenderForm= ()=>{
                         Question = {DefaultChlng.Question}
                         Description = {DefaultChlng.description}
                         Difficulty = {DefaultChlng.difficulty}
+                        language = {DefaultChlng.defaultBoilercode.language}
                         updateSection = {(key,value)=>
-                            updateSection(key , value)
+                            updateSection( key , value)
                         }
+                        UpdateSectionPro ={(key , value)=> UpdateSectionPro("defaultBoilercode",key ,value)}
                     />
                 )
          case "function-settings":
@@ -181,13 +189,17 @@ const RenderForm= ()=>{
                 endTime={DefaultChlng.endTime}
                 duration={DefaultChlng.duration}
                 isPublic={DefaultChlng.isPublic}
+                language = {DefaultChlng.defaultBoilercode.language}
                 tags={DefaultChlng.tags}
+                inputType={DefaultChlng.defaultBoilercode.inputType}
+                outputType={DefaultChlng.defaultBoilercode.outputType}
                 updateSection = {(key,value)=>
                     updateSection(key , value)
                 }
                 AddItemInArray = {(value)=> AddItemInArray("tags" , value)}
                 removeArrayItem = {(index)=> removeArrayItem("tags", index)}
                 updateArrayItem = {(index , key , value)=> updateArrayItem("tags" ,index , key , value )}
+                UpdateSectionPro = {(key , value)=>UpdateSectionPro("defaultBoilercode", key , value)}
                 />
             );
                 case "test-cases":
@@ -215,6 +227,19 @@ const RenderForm= ()=>{
     }
 }
 
+
+const UpdateSectionPro = (sectionName , key , value)=>{
+    
+    setDefaultChlng((prev)=>(
+    {
+        ...prev,
+        [sectionName]: {
+            ...prev[sectionName],
+            [key] : value
+        }
+    }))
+     
+}
 const AddItemInArray = (section , value)=>{
     setDefaultChlng((prev)=>(
         {
@@ -253,13 +278,14 @@ const updateArrayItem = (section , index ,key , value)=>{
         }
     })
 }
+
+
 const updateSection = (key , value)=>{
-    setDefaultChlng((prev)=>(
+     setDefaultChlng((prev)=>(
         {
             ...prev,
             [key] : value
-        }
-    ))
+        }))     
 }
 
 const DeleteChallenge = async()=>{
@@ -297,20 +323,26 @@ const validateAndNext = (e) => {
 
     switch (currentPage) {
         case "basic-info": {
-            const { Question, description, difficulty } = DefaultChlng;
+            const { Question, description, difficulty , defaultBoilercode } = DefaultChlng;
             if (!Question.trim()) errors.push("Question is required.");
+            if(!defaultBoilercode.language)
+                    errors.push("Language is Required")
             if (!description.trim()) errors.push("Description is required.");
             if (!difficulty.trim()) errors.push("Difficulty level is required.");
             break;
         }
 
         case "function-settings": {
-            const { startTime, duration, functionSignature, tags , endTime } = DefaultChlng;
+            const { startTime, duration, functionSignature, tags , endTime , defaultBoilercode } = DefaultChlng;
             if (!startTime) errors.push("Start time is required.");
             if(!endTime)  errors.push("End time is required.");
             if (new Date(endTime) < new Date(startTime)) errors.push("End time must be after start time.");
             if (new Date(startTime) < new Date()) errors.push("Start time must be in the future.");
             if (!duration) errors.push("Duration is required.");
+            if(! defaultBoilercode.inputType)
+                errors.push("Parameter Type is Required for the Language")
+            if(! defaultBoilercode.outputType)
+                errors.push("Return Type is Required for the Language")
             if (!functionSignature.trim()) errors.push("Function signature is required.");
             if (tags.length === 0 || !tags[0].trim()) {
                 errors.push("At least one tag is required.");

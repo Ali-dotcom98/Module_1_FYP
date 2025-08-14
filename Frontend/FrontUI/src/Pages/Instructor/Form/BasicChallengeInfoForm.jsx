@@ -1,7 +1,7 @@
 import React from 'react'
 import Input from '../../../Components/input';
 
-const BasicChallengeInfoForm = ({Question,Description, Difficulty, updateSection}) => {
+const BasicChallengeInfoForm = ({Question,Description, Difficulty, updateSection ,language ,UpdateSectionPro}) => {
     const handleDiffulty = ()=>{
         
     }
@@ -34,6 +34,19 @@ const BasicChallengeInfoForm = ({Question,Description, Difficulty, updateSection
                             <option value="Hard">Hard</option>
                         </select>
                     </div>
+
+                    <div className='flex flex-col my-2 space-y-1.5'>
+                        <label htmlFor="" className="font-medium">language</label>
+                        <select  className='p-3 bg-slate-50 relative outline-none rounded-md' name="" value={language} onChange={({target})=>UpdateSectionPro("language", target.value)} id="">
+                            <option value="C++">C++</option>
+                            <option value="Java">Java</option>
+                            <option value="C">C</option>
+                            <option value="Python">Python</option>
+
+                        </select>
+                    </div>
+
+
 
                     {/* <Input
                         value={Description || ""}
