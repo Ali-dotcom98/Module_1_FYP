@@ -5,6 +5,7 @@ const { Protect } = require("../Middleware/Token_Middleware");
 const router = express.Router();
 const Submission_Model = require("../Models/Submission.js");
 const Challenge_Model = require("../Models/Challenge_Model.js");
+const Submission = require("../Models/Submission.js");
 
 const JUDGE0_API = "https://judge0-ce.p.rapidapi.com";
 const RAPIDAPI_KEY = process.env.RAPIDAPI_KEY;
@@ -118,9 +119,9 @@ router.get("/StudentSubmission", Protect, async (req, res) => {
 
 const HandleTestcases = async (code, language, testCases) => {
     try {
-        console.log("code", code);
-        console.log("language", language);
-        console.log("testCases", testCases);
+        // console.log("code", code);
+        // console.log("language", language);
+        // console.log("testCases", testCases);
 
         if (!languageMap[language]) {
             throw new Error("Language not supported");
@@ -190,10 +191,16 @@ router.put("/Update/:id", Protect, async (req, res) => {
         const { code, language, testCases } = submission;
 
         if (submission.result == "Eliminated") {
+
             await submission.save();
+            const ChallengeUpdate = await Challenge_Model.findOne({ _id: submission.challengeID })
+            ChallengeUpdate.SubmittedBy = [...ChallengeUpdate.SubmittedBy, submission.studentID];
+            ChallengeUpdate.save();
         }
         else {
             const getSubmissionResult = await HandleTestcases(code, language, testCases);
+            console.log("getSubmissionResult", getSubmissionResult);
+
             if (getSubmissionResult) {
                 submission.DetailTestCases = getSubmissionResult;
             }
@@ -202,16 +209,17 @@ router.put("/Update/:id", Protect, async (req, res) => {
             const TotalCase = getSubmissionResult.length;
             const result = TestCasePassed >= 1 ? "Passed" : "Failed"
 
+
             submission.result = result || submission.result
             submission.totalTestCaseClear = TestCasePassed
             submission.totalTestCase = TotalCase || submission.totalTestCase
 
             await submission.save();
-        }
 
-        const UpdateChallengeID = await Challenge_Model.findOne({ _id: ChallengeId });
-        UpdateChallengeID.attempt = true;
-        UpdateChallengeID.save();
+            const ChallengeUpdate = await Challenge_Model.findOne({ _id: submission.challengeID })
+            ChallengeUpdate.SubmittedBy = [...ChallengeUpdate.SubmittedBy, submission.studentID];
+            ChallengeUpdate.save();
+        }
         res.json(submission);
 
     } catch (error) {
@@ -221,7 +229,93 @@ router.put("/Update/:id", Protect, async (req, res) => {
 });
 
 
+router.get("/ranking/:challengeId", async (req, res) => {
+    try {
+        const challengeId = req.params.challengeId;
 
+
+        let submissions = await Submission.find({
+            challengeID: challengeId,
+            result: "Passed"
+        }).lean().populate("studentID");
+
+
+        submissions.sort((a, b) => {
+
+            if (b.totalTestCaseClear !== a.totalTestCaseClear) {
+                return b.totalTestCaseClear - a.totalTestCaseClear;
+            }
+
+            let aTime = Math.min(...a.DetailTestCases.map(tc => tc.time));
+            let bTime = Math.min(...b.DetailTestCases.map(tc => tc.time));
+            if (aTime !== bTime) {
+                return aTime - bTime;
+            }
+
+            let aMemory = Math.min(...a.DetailTestCases.map(tc => tc.memory));
+            let bMemory = Math.min(...b.DetailTestCases.map(tc => tc.memory));
+            if (aMemory !== bMemory) {
+                return aMemory - bMemory;
+            }
+
+            return new Date(a.createdAt) - new Date(b.createdAt);
+        });
+
+        // Step 3: Add rank
+        const ranked = submissions.map((s, i) => ({
+            rank: i + 1,
+            studentID: s.studentID,
+            totalTestCaseClear: s.totalTestCaseClear,
+            totalTestCase: s.totalTestCase,
+            executionTime: Math.min(...s.DetailTestCases.map(tc => tc.time)),
+            memory: Math.min(...s.DetailTestCases.map(tc => tc.memory)),
+            createdAt: s.createdAt
+        }));
+
+        res.json(ranked);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Server Error" });
+    }
+});
+
+
+router.get('/top3-submissions', async (req, res) => {
+    try {
+        const topStudents = await Submission_Model.aggregate([
+            {
+                $match: {
+                    result: { $ne: "Pending" }
+                }
+            },
+            {
+                $group: {
+                    _id: "$studentID",
+                    submissionCount: { $sum: 1 }
+                }
+            },
+            {
+                $sort: {
+                    submissionCount: -1
+                }
+            },
+            {
+                $limit: 3
+            }
+        ])
+        const populated = await Submission_Model.populate(topStudents, {
+            path: "_id",
+            model: "User",
+            select: "name email"
+        });
+
+
+        res.json(topStudents);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Server Error' });
+    }
+});
 
 // router.post("/Submit", async (req, res) => {
 //     try {

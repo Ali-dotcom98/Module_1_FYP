@@ -28,6 +28,12 @@ const challengeSchema = new mongoose.Schema({
     functionSignature: {
         type: String,
     },
+    defaultBoilercode: {
+        language: { type: String },
+        inputType: { type: String },
+        outputType: { type: String },
+    },
+
     difficulty: {
         type: String,
         enum: ["Easy", "Medium", "Hard"],
@@ -71,6 +77,9 @@ const challengeSchema = new mongoose.Schema({
             input: { type: String },
             output: { type: String }
         }
+    ],
+    SubmittedBy: [
+        { type: String }
     ]
 
 }, { timestamps: { createdAt: "createdAt", updatedAt: "updatedAt" } });

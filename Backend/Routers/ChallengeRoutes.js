@@ -5,6 +5,7 @@ const Challenge_Model = require("../Models/Challenge_Model");
 const upload = require("../Middleware/Upload_Middleware");
 const path = require("path")
 const fs = require("fs");
+const Submission = require("../Models/Submission");
 route.post("/Create", Protect, async (req, res) => {
     try {
 
@@ -20,6 +21,12 @@ route.post("/Create", Protect, async (req, res) => {
             startTime: "",
             endTime: "",
             duration: "",
+            SubmittedBy: [""],
+            defaultBoilercode: {
+                language: "",
+                inputType: "",
+                outputType: ""
+            },
             tags: "",
             attempt: false,
             isPublic: false,
@@ -54,6 +61,7 @@ route.post("/Create", Protect, async (req, res) => {
 
 })
 
+
 route.get("/GetAll", Protect, async (req, res) => {
     try {
         const status = req.user.status;
@@ -77,7 +85,7 @@ route.get("/GetAllWithPublic", Protect, async (req, res) => {
         if (status == "Instrutor")
             return res.status(401).json({ message: "Instrutor are Not Allowed" })
 
-        const NumberOfChallengeCreated = await Challenge_Model.find({ attempt: false })
+        const NumberOfChallengeCreated = await Challenge_Model.find({ isPublic: true, SubmittedBy: { $ne: req.user._id } })
         if (!NumberOfChallengeCreated)
             return res.send("Looks like no challenges have been created yet!")
         res.send(NumberOfChallengeCreated)
