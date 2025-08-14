@@ -26,11 +26,12 @@ const OnlineCompiler = ({CompetitonDetail , ActualSubmissionData}) => {
   const [output, setOutput] = useState('');
   const [input, setInput] = useState('');
   const [languageId, setLanguageId] = useState(63); // Default to C++
-  const [languageLabel, setLanguageLabel] = useState('C++');
+  const [languageLabel, setLanguageLabel] = useState("C++");
   const [isRunning, setIsRunning] = useState(false);
   const [status, setStatus] = useState('idle'); // 'idle' | 'running' | 'success' | 'error'
   const [timeLeft, setTimeLeft] = useState(null);
   const [cheatCount, setCheatCount] = useState(0);
+  const [isSubmitting, setisSubmitting] = useState(false)
   const minutes = Math.floor(timeLeft / 60);
   const seconds = timeLeft % 60;
 
@@ -39,7 +40,7 @@ const OnlineCompiler = ({CompetitonDetail , ActualSubmissionData}) => {
   
   
 
-  // console.log("CompetitonDetail",CompetitonDetail);
+  console.log("CompetitonDetail",CompetitonDetail);
   // console.log("Submission", ActualSubmissionData);
 
   useEffect(()=>{
@@ -51,8 +52,16 @@ const OnlineCompiler = ({CompetitonDetail , ActualSubmissionData}) => {
   if (CompetitonDetail.testCases) {
     setSubmissionForm(prev => ({
       ...prev,
+      language : CompetitonDetail.defaultBoilercode.language ,
+      defaultBoilercode : {
+        language : CompetitonDetail.defaultBoilercode.language,
+        inputType :  CompetitonDetail.defaultBoilercode.inputType,
+        outputType :  CompetitonDetail.defaultBoilercode.outputType
+
+      },
       testCases: [...CompetitonDetail?.testCases] || prev?.testCases
     }));
+    setLanguageLabel(CompetitonDetail.defaultBoilercode.language)
   }
 }, [CompetitonDetail]);
 
@@ -69,17 +78,21 @@ console.log("SubmissionForm",SubmissionForm);
 
 const handleSubmit = async()=>{
   try {
+    setisSubmitting(true)
     const response = await AxiosInstance.put(API_PATHS.CODE.UPDATE(SubmissionForm?._id) , SubmissionForm);
     if(response)
     {
-      toast.success("Submission Successfully");
       navigator("/Student/Dashboard")
+      toast.success("Submission Successfully");
     }
 
   } catch (error) {
+    setisSubmitting(false)
     toast.error("Issue")
-    console.log(error);
-    
+    console.log(error); 
+  }
+  finally{
+    setisSubmitting(false)
   }
 }
 
@@ -89,48 +102,53 @@ const handleSubmit = async()=>{
 
 
 
-
-
-
-
   const setBoilerCode = (label) => {
-  switch (label) {
-    case "C++":
-      return setCode(`#include <iostream>
-using namespace std;
+    if(CompetitonDetail)
+    {
+      switch (CompetitonDetail.defaultBoilercode.language) {
+            case "C++":
+              return setCode(`#include <iostream>
+        using namespace std;
 
-int main() {
-    
-    return 0;
-}`);
+        int main() {
+            
+            return 0;
+        }`);
 
-    case "Python":
-      return setCode(`# Your code here`);
+            case "Python":
+              return setCode(`# Your code here`);
 
-    case "Java":
-      return setCode(`public class Main {
-    public static void printNumbers(int n) {
-        for (int i = 1; i <= n; i++) {
-            System.out.println(i);
-        }
-    }
+            case "Java":
+              return setCode(`
+import java.util.Scanner;
+public class Main { 
+    public static ${CompetitonDetail.defaultBoilercode.outputType} ${CompetitonDetail.functionSignature}(${CompetitonDetail.defaultBoilercode.inputType} n) {
+    // Write your login here
+    return true;
+}
 
-    public static void main(String[] args) {
-        printNumbers(5);  
-    }
-}`);
+public static void main(String[] args) {
+  Scanner sc = new Scanner(System.in);
+  String input = sc.nextLine().trim().toLowerCase();
+  System.out.println(${CompetitonDetail.functionSignature}(input));
+  sc.close();
 
-    case "C":
-      return setCode(`#include <stdio.h>
-
-int main() {
-    
-    return 0;
-}`);
-
-    default:
-      break;
   }
+}`);
+
+            case "C":
+              return setCode(`#include <stdio.h>
+
+        int main() {
+            
+            return 0;
+        }`);
+
+            default:
+              break;
+          }
+    }
+  
 };
 
   const handleLanguageChange = (id, label) => {
@@ -192,7 +210,13 @@ const handleCheating = () => {
     setCheatCount((prev) => {
       const newcount = (prev + 1);
       if (newcount === 2) {
-        alert("You have been eliminated for leaving the screen!");
+
+        setSubmissionForm((prev)=>(
+          {
+            ...prev,
+            result : "Eliminated"
+          }
+        ))
         
       } else {
         alert(`⚠ Warning ${newcount}/2: Leaving the competition screen is not allowed. One more violation will result in disqualification.`);
@@ -203,38 +227,44 @@ const handleCheating = () => {
   };
 
 
+useEffect(() => {
+  if (SubmissionForm.result === "Eliminated") {
+    handleSubmit();
+  }
+}, [SubmissionForm]);
 
 
 
-// useEffect(() => {
-//   const handleVisibilityChange = () => {
-//     if (document.visibilityState === "hidden") {
-//       handleCheating();
-//     }
-//   };
 
-//   document.addEventListener("visibilitychange", handleVisibilityChange);
+useEffect(() => {
+  const handleVisibilityChange = () => {
+    if (document.visibilityState === "hidden") {
+      handleCheating();
+    }
+  };
+
+  document.addEventListener("visibilitychange", handleVisibilityChange);
   
 
-//   return () => {
-//     document.removeEventListener("visibilitychange", handleVisibilityChange);
+  return () => {
+    document.removeEventListener("visibilitychange", handleVisibilityChange);
     
-//   };
-// }, []);
+  };
+}, []);
 
-// useEffect(() => {
-//   const handleBeforeUnload = (event) => {
-//     event.preventDefault();
-//     alert("Are you sure you want to leave? Your progress will be lost.")
+useEffect(() => {
+  const handleBeforeUnload = (event) => {
+    event.preventDefault();
+    alert("Are you sure you want to leave? Your progress will be lost.")
 
-//   };
+  };
 
-//   window.addEventListener("beforeunload", handleBeforeUnload);
+  window.addEventListener("beforeunload", handleBeforeUnload);
 
-//   return () => {
-//     window.removeEventListener("beforeunload", handleBeforeUnload);
-//   };
-// }, []);
+  return () => {
+    window.removeEventListener("beforeunload", handleBeforeUnload);
+  };
+}, []);
 
 useEffect(() => {
   if (CompetitonDetail?.duration) {
@@ -242,20 +272,25 @@ useEffect(() => {
   }
 }, [CompetitonDetail]);
 
-// useEffect(() => {
-//   if (timeLeft === null) return; 
+useEffect(() => {
+  if (timeLeft === null) return; 
 
-//   if (timeLeft <= 0) {
-//     handleSubmit();
-//     return;
-//   }
+  if (timeLeft <= 0) {
+      setSubmissionForm((prev)=>(
+            {
+              ...prev,
+              result : "Eliminated"
+            }
+          ))
+      
+  }
 
-//   const timer = setInterval(() => {
-//     setTimeLeft(prev => prev - 1);
-//   }, 1000);
+  const timer = setInterval(() => {
+    setTimeLeft(prev => prev - 1);
+  }, 1000);
 
-//   return () => clearInterval(timer);
-// }, [timeLeft]);
+  return () => clearInterval(timer);
+}, [timeLeft]);
   return (
     <>
       <div className="font-urbanist grid grid-cols-1 md:grid-cols-2 gap-2 px-3">
@@ -316,7 +351,7 @@ useEffect(() => {
                     <span className=' min-w-10'>{minutes}:{seconds < 10 ? `0${seconds}` : seconds}</span> Remaining 
                   </button>
                   <button className='btn-small' onClick={handleSubmit} >
-                    Submit
+                    {isSubmitting ? "Submitting...": "Submit"}
                   </button>
                 </div>
               </div>
