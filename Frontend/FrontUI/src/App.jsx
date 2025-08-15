@@ -37,6 +37,7 @@ import { ToastContainer } from 'react-toastify'
                 >
                 <Route path='Dashboard' element={<Dashboard/>}/>
                 <Route path='Manage' element={<ManagaCometition/>}/>
+                <Route path='Leaderboard' element={<Leaderboard/>}/>
               </Route>
               <Route path='/Instructor/Challenge/:ChallengeID' element={
                   <EditChallenge/>

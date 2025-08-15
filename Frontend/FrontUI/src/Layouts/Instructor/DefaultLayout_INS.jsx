@@ -13,7 +13,7 @@ const DefaultLayout_INS = () => {
         </div>
         <div className='w-[80%]'>
           <NavBar/>
-          <div className='m-4'><Outlet/></div>
+          <div className='m-4 px-3'><Outlet/></div>
         </div>
     </div>
     
