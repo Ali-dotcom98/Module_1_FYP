@@ -12,6 +12,7 @@ export const API_PATHS = {
         GET_ALL: "/Chlg/GetAll",
         GET_BY_ID: (id) => `/Chlg/GetAll/${id}`,
         GET_PUBLIC_CHALLENGE: "/Chlg/GetAllWithPublic",
+        GET_LEADERBOARD: "/Chlg/GetLeaderBoardData",
         UPDATE: (id) => `/Chlg/Update/${id}`,
         DELETE: (id) => `/Chlg/Delete/${id}`,
         DELETE_LIST: "/Chlg/DeleteList",
