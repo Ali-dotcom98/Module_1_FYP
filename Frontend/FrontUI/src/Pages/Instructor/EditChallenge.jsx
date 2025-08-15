@@ -83,6 +83,7 @@ const fetchChallengeDetailsById = async () => {
         functionSignature: challengeInfo?.functionSignature || "",
         difficulty: challengeInfo?.difficulty || "",
         startTime: challengeInfo?.startTime || "",
+        endTime: challengeInfo?.endTime || "",
         duration: challengeInfo?.duration || "",    
         isPublic: challengeInfo?.isPublic || false,
         testCases: challengeInfo?.testCases || prevState?.testCases,
@@ -157,6 +158,7 @@ const updateChallengeDetails = async (thumbnailLink) => {
             {
                 ...DefaultChlng,
                 thumbnailLink: thumbnailLink || "",
+                
             }
         );
        
@@ -184,15 +186,15 @@ const RenderForm= ()=>{
          case "function-settings":
             return (
                 <FunctionSettingsForm   
-                functionSignature={DefaultChlng.functionSignature}
-                startTime={DefaultChlng.startTime}
-                endTime={DefaultChlng.endTime}
-                duration={DefaultChlng.duration}
-                isPublic={DefaultChlng.isPublic}
-                language = {DefaultChlng.defaultBoilercode.language}
-                tags={DefaultChlng.tags}
-                inputType={DefaultChlng.defaultBoilercode.inputType}
-                outputType={DefaultChlng.defaultBoilercode.outputType}
+                functionSignature={DefaultChlng?.functionSignature}
+                startTime={DefaultChlng?.startTime}
+                endTime={DefaultChlng?.endTime}
+                duration={DefaultChlng?.duration}
+                isPublic={DefaultChlng?.isPublic}
+                language = {DefaultChlng?.defaultBoilercode?.language}
+                tags={DefaultChlng?.tags}
+                inputType={DefaultChlng?.defaultBoilercode?.inputType}
+                outputType={DefaultChlng?.defaultBoilercode?.outputType}
                 updateSection = {(key,value)=>
                     updateSection(key , value)
                 }
@@ -424,13 +426,14 @@ const updateBaseWidth = () => {
   };
 }, [ChallengeID , Buffer]);
 
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            setBuffer(false);
-        }, 3000);
+// useEffect(() => {
+//     setBuffer(true);
+//     const timer = setTimeout(() => {
+//         setBuffer(false);
+//     }, 3000);
 
-        return () => clearTimeout(timer);
-    }, []);
+//     return () => clearTimeout(timer);
+// }, [ChallengeID]);
 
     if (Buffer) {
         return <Spinner message={"Preparing your challenge..."}/>
@@ -438,7 +441,7 @@ const updateBaseWidth = () => {
 
     return (
     <div className="container mx-auto font-urbanist">
-        <div className="flex items-center justify-between gap-5 bg-white rounded-lg border border-purple-100 py-3 px-4 mb-4 py-3 mt-4">
+        <div className="flex items-center justify-between gap-5 bg-white rounded-lg border border-purple-100 py-3 px-4 mb-4 mt-4">
         
         <div className="flex items-center gap-4">
             <button

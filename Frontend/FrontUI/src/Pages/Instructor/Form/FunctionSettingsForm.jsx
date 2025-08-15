@@ -2,9 +2,16 @@ import React, { useState } from 'react'
 import Input from '../../../Components/input'
 import { LuPlus, LuTrash2 } from 'react-icons/lu'
 import { formatYearMonth } from '../../../Utility/Helper'
+import moment from 'moment'
+import { data } from 'react-router-dom'
 
 const FunctionSettingsForm = ({language,functionSignature,startTime,duration,isPublic,tags,updateSection ,endTime, AddItemInArray , removeArrayItem ,updateArrayItem , inputType , outputType , UpdateSectionPro}) => {
     const [AddArray, setAddArray] = useState(false)
+    console.log("endTime" , endTime);
+    const formatDate = (date) => {
+    if (!date) return '';
+    return new Date(date).toISOString().split('T')[0];
+    };
 
     return (
     <div className="px-5 pt-5">
@@ -19,14 +26,15 @@ const FunctionSettingsForm = ({language,functionSignature,startTime,duration,isP
                     <Input
                     label="Start Date"
                     type="date"
-                    value={startTime}
+                    value={startTime ? moment(startTime).format('YYYY-MM-DD') : ''}
                     onchange={({ target }) => updateSection("startTime", target.value)}
                     />
                     <Input
-                    value={endTime}
-                    onchange={({ target }) => updateSection("endTime", target.value)}
                     label="endTime"
                     type="date"
+                    value={endTime ? moment(endTime).format('YYYY-MM-DD') : ''}
+                    onchange={({ target }) => updateSection("endTime", target.value)}
+                    
                     />
 
                     <Input

@@ -10,6 +10,7 @@ const ManagaCometition = () => {
     const [AllChallenge, setAllChallenge] = useState([])
     const [DeletedArray, setDeletedArray] = useState([])
     const [Select, setSelect] = useState(false)
+
     
     console.log("AllChallenge",AllChallenge);
     
@@ -57,11 +58,12 @@ const ManagaCometition = () => {
 
     return (
     <div className="font-urbanist grid grid-cols-1 md:grid-cols-5 gap-4 md:gap-7 pt-1 pb-6 px-4 md:px-0 ">
-        <div className='border col-span-5 px-3 py-4 space-x-4'>
-            <button onClick={()=>(setSelect((prev)=>!prev), setDeletedArray([]))} className='border' >Select</button>
+        <div className="flex col-span-5 items-center justify-between gap-5 bg-white rounded-lg border border-purple-100 py-3 px-4  mt-2">
+
+            <button onClick={()=>(setSelect((prev)=>!prev), setDeletedArray([]))} className='btn-small-light' >Select</button>
             {
                 Select && DeletedArray.length > 0 && (
-                    <button onClick={HandleDelete}>Delete{(DeletedArray.length)}</button>
+                    <button className='btn-small-light' onClick={HandleDelete}>Delete {(DeletedArray.length)}</button>
                 )
             }
             
