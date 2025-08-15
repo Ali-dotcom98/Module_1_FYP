@@ -31,7 +31,7 @@ export const SIDE_MENU_DATA = [
         id: "03",
         label: "Leader Board",
         icon: LucideBarChart2,
-        path: "/admin/users",
+        path: "/Instructor/Leaderboard",
     },
 
     {
