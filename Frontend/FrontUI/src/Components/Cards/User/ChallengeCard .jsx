@@ -4,6 +4,7 @@ import img from '../../../assets/images.jpg'
 import Progress from "../../Progress/StepProgress"
 import moment from 'moment'
 const ChallengeCard  = ({  
+    tag,
     ID,
     title, 
     description,
@@ -46,7 +47,7 @@ const ChallengeCard  = ({
         }
     }
   return (
-    <div className='font-urbanist bg-white rounded-xl py-4 shadow-md shadow-gray-100 border border-x-gray-200/50 cursor-pointer' 
+    <div className='relative overflow-hidden font-urbanist bg-white rounded-xl py-4 shadow-md shadow-gray-100 border border-x-gray-200/50 cursor-pointer' 
     onClick={()=>onselect(ID)}>
         <div className='flex items-end gap-3 px-4 '>
             <div className={`text-[11px] font-medium ${getpriority()} px-4 py-0.5 rounded`}>
@@ -65,6 +66,12 @@ const ChallengeCard  = ({
         <div className={`px-4 border-l-[3px] border-purple-600 space-y-3`}>
             <p className='text-sm font-medium text-gray-800 mt-4 line-clamp-2'>{title}</p>
             <p className='text-xs text-gray-500 mt-1.5 line-clamp-3 leading-[18px] min-h-14'>{description}</p>
+                {
+                    tag && (
+                    <p className='absolute bg-red-300 text-red-600 top-5 -right-9 rotate-45 min-w-36 text-center'>{Date.now <= endTime ? "Active " : "Closed" }</p>
+
+                    )
+                }
             <Progress progres={100} status={status}/>
         </div>
         <div className='px-4'> 
