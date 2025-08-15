@@ -4,10 +4,18 @@ import { API_PATHS } from '../../Utility/API_Path'
 import { Trophy, TrophyIcon } from 'lucide-react'
 import LeaderBoardHeader from './Components/LeaderBoardHeader'
 import ChallengeCard from '../../Components/Cards/User/ChallengeCard '
+import ListPerformerHeader from './Components/ListPerformerHeader'
+import ListofPerformer from './Components/ListofPerformer'
+import Spinner from "../../Components/Spinner/Spinner"
 const Leaderboard = () => {
   const [TopPerformers, setTopPerformers] = useState([])
   const [LeaderBoardData, setLeaderBoardData] = useState([])
+  const [TopPerformerOfChallenge, setTopPerformerOfChallenge] = useState([])
+  console.log("TopPerformerOfChallenge",TopPerformerOfChallenge);
+  
+  const [display, setdisplay] = useState("")
   console.log("LeaderBoardData",LeaderBoardData);
+  const [isLoading, setisLoading] = useState(false)
   
   const FetchTopPerformer = async()=>{
     try {
@@ -23,6 +31,32 @@ const Leaderboard = () => {
     }
   }
 
+  const FetchTopPerformerOfSpecificChallenge = async()=>{
+    try {
+        setisLoading(true)
+        const response = await AxiosInstance.get(API_PATHS.CODE.GET_CHALLENGE_PERFORMER(display));
+        if(response.data)
+        {
+          setTopPerformerOfChallenge(response.data);
+        }
+    } catch (error) {
+      setisLoading(false)
+      console.log(error);
+    }
+    finally{
+      setisLoading(false);
+    }
+  }
+  useEffect(()=>{
+    if(display)
+    {
+      FetchTopPerformerOfSpecificChallenge();
+    }
+  },[display])
+
+  const ConfirmID = (ID)=>{
+    setdisplay(ID);
+  }
   const FetchCompletedChallenges = async()=>{
     try {
       const result = await AxiosInstance.get(API_PATHS.CHALLENGE.GET_LEADERBOARD);
@@ -45,7 +79,7 @@ const Leaderboard = () => {
   
 
   return (
-    <div className='font-urbanist min-h-screen  px-4 '>
+    <div  className='relative font-urbanist min-h-screen  px-4 '>
       <LeaderBoardHeader TopPerformers={TopPerformers} />
       <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mt-4'>
               {
@@ -67,7 +101,22 @@ const Leaderboard = () => {
                 )
                 })
               }
-            </div>
+      </div>
+      <div   className={`min-h-screen border rounded-md bg-slate-50 px-5 py-5 absolute w-1/2 top-0 right-0 transform transition-transform duration-500 ease-in-out ${display ? "translate-x-0":"-right-32 translate-x-full"}`}>
+            {
+              isLoading ? <Spinner/>
+                :
+                <>
+                <ListPerformerHeader
+                  onClose={()=>setdisplay("")}
+                />
+                <ListofPerformer 
+                  user = {TopPerformerOfChallenge}
+                />
+                </>
+
+            }
+      </div>
 
     </div>
   )
