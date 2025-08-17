@@ -5,7 +5,7 @@ const ChallengeCard = ({ imgurl, title, lastUpdated, onSelect, DeletedArray , ID
     return(
         <div
             className={`${DeletedArray ? DeletedArray?.includes(ID)?"border border-purple-600 ":"" : ""} h-[300px] flex flex-col items-center justify-between bg-white rounded-lg border border-gray-200  cursor-pointer hover:border-purple-600 overflow-hidden transition`}
-            style={{backgroundColor: "rgb(246, 250, 250)"}}
+            style={{backgroundColor: "#F5F4FF"}}
             onClick={onSelect}
             >
             <div className="p-4">
