@@ -3,7 +3,7 @@ import moment from "moment"
 import html2canvas from "html2canvas";
 
 export function formatYearMonth(yearMonth) {
-    return yearMonth ? moment(yearMonth, "YYYY-MM").format("MMM YYYY") : "";
+    return yearMonth ? moment(yearMonth).format("Do MMM YYYY") : "";
 }
 
 
@@ -11,14 +11,28 @@ export const fixTailwindColors = (element) => {
     const elements = element.querySelectorAll("*");
     elements.forEach((el) => {
         const style = window.getComputedStyle(el);
+
         ["color", "backgroundColor", "borderColor"].forEach((prop) => {
             const value = style[prop];
-            if (value.includes("oklch")) {
-                el.style[prop] = "#000"; // or any safe fallback
+
+            if (value.startsWith("oklch")) {
+                try {
+                    // Let the browser convert oklch() to rgb
+                    const temp = document.createElement("div");
+                    temp.style.color = value;
+                    document.body.appendChild(temp);
+                    const rgb = window.getComputedStyle(temp).color;
+                    document.body.removeChild(temp);
+
+                    el.style[prop] = rgb; // assign safe rgb value
+                } catch (err) {
+                    el.style[prop] = "#000"; // fallback
+                }
             }
         });
     });
 };
+
 // Convert component to image
 export async function captureElementAsImage(element) {
     if (!element) throw new Error("No element provided");
