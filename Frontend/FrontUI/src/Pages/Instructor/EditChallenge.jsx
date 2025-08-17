@@ -138,11 +138,11 @@ const upLoadChallengeImage = async () => {
         // Call the second API to update other resume data
         await updateChallengeDetails(thumbnaillink);
 
-        // toast.success("Resume Updated Successfully!");
+       
         navigator("/Instructor/Dashboard");
     } catch (error) {
         console.error("Error uploading images:", error);
-        // toast.error("Failed to upload images");
+        
     } finally {
         setisLoading(false);
     }

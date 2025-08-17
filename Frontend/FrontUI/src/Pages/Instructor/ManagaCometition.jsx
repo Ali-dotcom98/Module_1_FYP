@@ -57,8 +57,8 @@ const ManagaCometition = () => {
     }, []);
 
     return (
-    <div className="font-urbanist grid grid-cols-1 md:grid-cols-5 gap-4 md:gap-7 pt-1 pb-6 px-4 md:px-0 ">
-        <div className="flex col-span-5 items-center justify-between gap-5 bg-white rounded-lg border border-purple-100 py-3 px-4  mt-2">
+    <>
+        <div className="flex font-urbanist mb-4 items-center justify-between h-fit bg-white rounded-lg border border-purple-100 py-3 px-4  mt-2">
 
             <button onClick={()=>(setSelect((prev)=>!prev), setDeletedArray([]))} className='btn-small-light' >Select</button>
             {
@@ -68,33 +68,35 @@ const ManagaCometition = () => {
             }
             
         </div>
-        {AllChallenge?.map((Challenge , index) => (
-        <div onClick={()=>handleChanges(Challenge._id , true)}>
-            <ChallengeCard
-                ID={Challenge?._id}
-                imgurl={Challenge?.thumbnailLink || null}
-                title={Challenge?.title || "Untitled Resume"}
-                lastUpdated={
-                Challenge?.updatedAt
-                    ? moment(Challenge.updatedAt).format("Do MMM YYYY")
-                    : "Unknown"
-                }
-                DeletedArray={DeletedArray}
-            />
-            <div className='flex flex-col my-2 space-y-1.5'>
-                {
-                    Select && (
-                    <input className='p-3 bg-slate-50 relative outline-none rounded-md' type="checkbox"  name='Check' checked={DeletedArray.includes(Challenge._id)}
-                        onChange={({target})=>handleChanges(Challenge._id , target.checked)}
-                    />
-                    )
-                }
-            </div>
+        <div className="font-urbanist grid grid-cols-1 md:grid-cols-5 gap-4 md:gap-5 pt-1 pb-6 px-4 md:px-0  min-h-screen">
+            {AllChallenge?.map((Challenge , index) => (
+            <div onClick={()=>handleChanges(Challenge._id , true)}>
+                <ChallengeCard
+                    ID={Challenge?._id}
+                    imgurl={Challenge?.thumbnailLink || null}
+                    title={Challenge?.title || "Untitled Resume"}
+                    lastUpdated={
+                    Challenge?.updatedAt
+                        ? moment(Challenge.updatedAt).format("Do MMM YYYY")
+                        : "Unknown"
+                    }
+                    DeletedArray={DeletedArray}
+                />
+                <div className='flex flex-col my-2 space-y-1.5'>
+                    {
+                        Select && (
+                        <input className='p-3 bg-slate-50 relative outline-none rounded-md' type="checkbox"  name='Check' checked={DeletedArray.includes(Challenge._id)}
+                            onChange={({target})=>handleChanges(Challenge._id , target.checked)}
+                        />
+                        )
+                    }
+                </div>
 
+            </div>
+            
+            ))}
         </div>
-        
-        ))}
-    </div>
+    </>
     )
 }
 

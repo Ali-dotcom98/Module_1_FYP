@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { DefaultContext } from 'react-icons/lib';
 import { formatYearMonth } from '../../../Utility/Helper';
+import ChallengeHeader from '../ChallengeHeader';
 
 const Title = ({ text, color ,status}) => {
     return (
@@ -23,7 +24,7 @@ const displayedTests = showAllTests
   : (data?.testCases?.slice(0, 2) || []);
 
 
-    const DEFAULT_THEME =status ?["#F5F4FF", "#E0DBFF", "#C9C2F8", "#8579D1", "#4B4B5C"]: ["#EBFDFF", "#A1F4FD", "#CEFAFE", "#00B8DB", "#4A5565"];
+    const DEFAULT_THEME =["#F5F4FF",  "#E0DBFF",  "#C9C2F8", "#6C63FF", "#4B4B5C"];
      const resumeRef = useRef(null);
     const [baseWidth, setBaseWidth] = useState(780); // Default value
     const [scale, setScale] = useState(1);
@@ -38,7 +39,7 @@ const displayedTests = showAllTests
   return (
     <div
         ref={resumeRef}
-        className={`bg-white ${status ?"px-3":"p-3"}`}
+        className={`bg-white ${status ?"px-3 ":"p-3"}`}
         style={{
         transform: containerWidth > 0 ? `scale(${scale})` : "none",
         transformOrigin: "top left",
@@ -47,22 +48,11 @@ const displayedTests = showAllTests
         }}>
         <div className="flex flex-col bg-white ">
             {
-                !status && (
-                    <div className="py-5 border-b-2  border-b-[#A1F4FD] " style={{ backgroundColor: DEFAULT_THEME[0] }}>
-                        <div  className="flex flex-col items-center px-2  ">
-                            <Title text="Code Asced Code Competion " color={DEFAULT_THEME[1]} />
-                            <div className='flex items-center justify-between w-full px-4 py-2'>
-                                <Title text={`Time : ${data.duration} Min`} color={DEFAULT_THEME[1]} />
-                                <Title text={`Date : ${formatYearMonth(data.startTime)}`} color={DEFAULT_THEME[1]} />
-                            </div>
-                            <div>
-                                <Title text={data.Question} color={DEFAULT_THEME[1]} />
-                            </div>
-                            
-                        </div>
-                    
-                    </div>
-                )
+                 <ChallengeHeader
+                        data ={data}
+                        DEFAULT_THEME = {DEFAULT_THEME}
+                        
+                    />
             }
             <div className={`${status ?"px-3":"px-5 py-4"}  space-y-4`}>
                 <div>
@@ -81,10 +71,22 @@ const displayedTests = showAllTests
                         )
                     }
                     <div className='flex gap-3'>
-                        <Title text="Difficulty" color={DEFAULT_THEME[1]} status={status} />
-                        <span className={`inline-block bg-yellow-100 text-yellow-700 px-2 py-2 ${status ?"text-sm":"text-xs"}  rounded-full`}>
-                            {data.difficulty}
-                        </span>
+                        {
+                            status?
+                            <div>
+                                <Title text="Difficulty" color={DEFAULT_THEME[1]} status={status} />
+                                <span className={`inline-block bg-yellow-100 text-yellow-700 px-2 py-2 ${status ?"text-sm":"text-xs"}  rounded-full`}>
+                                    {data.difficulty}
+                                </span>
+                            </div>
+                            :
+                            <div>
+                                <Title text="Difficulty" color={DEFAULT_THEME[1]} />
+                                <span className={`inline-block bg-yellow-100 text-yellow-700 px-2 py-2 text-xs   rounded-full`}>
+                                    {data.difficulty}
+                                </span>
+                            </div>
+                        }
                     </div>
 
                 </div>
@@ -124,7 +126,7 @@ const displayedTests = showAllTests
                     </div>
                 </div>
                  {
-                    status && (
+                    (
                         <div className="w-full col-span-2 ">
                             <Title text="Tags" color={DEFAULT_THEME[1]} status={status}/>
                             <div className="flex flex-row items-center flex-wrap gap-3">
