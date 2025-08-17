@@ -236,21 +236,21 @@ useEffect(() => {
 
 
 
-useEffect(() => {
-  const handleVisibilityChange = () => {
-    if (document.visibilityState === "hidden") {
-      handleCheating();
-    }
-  };
+// useEffect(() => {
+//   const handleVisibilityChange = () => {
+//     if (document.visibilityState === "hidden") {
+//       handleCheating();
+//     }
+//   };
 
-  document.addEventListener("visibilitychange", handleVisibilityChange);
+//   document.addEventListener("visibilitychange", handleVisibilityChange);
   
 
-  return () => {
-    document.removeEventListener("visibilitychange", handleVisibilityChange);
+//   return () => {
+//     document.removeEventListener("visibilitychange", handleVisibilityChange);
     
-  };
-}, []);
+//   };
+// }, []);
 
 useEffect(() => {
   const handleBeforeUnload = (event) => {
@@ -357,10 +357,8 @@ useEffect(() => {
               </div>
               {/* ProblemSummary */}
               <div className='bg-white rounded-lg border border-purple-100  overflow-y-scroll overflow-x-hidden'>
-                  <h2 className="text-lg font-bold text-gray-900 px-5 py-3">{CompetitonDetail.Question}</h2>
                   <div className='h-[90vh]'>
                     <RenderFrom data={CompetitonDetail} containerWidth={650} status={"Student"}/>
-
                   </div>
               </div>
         </div>
