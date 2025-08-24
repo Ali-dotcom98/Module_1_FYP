@@ -236,21 +236,21 @@ useEffect(() => {
 
 
 
-// useEffect(() => {
-//   const handleVisibilityChange = () => {
-//     if (document.visibilityState === "hidden") {
-//       handleCheating();
-//     }
-//   };
+useEffect(() => {
+  const handleVisibilityChange = () => {
+    if (document.visibilityState === "hidden") {
+      handleCheating();
+    }
+  };
 
-//   document.addEventListener("visibilitychange", handleVisibilityChange);
+  document.addEventListener("visibilitychange", handleVisibilityChange);
   
 
-//   return () => {
-//     document.removeEventListener("visibilitychange", handleVisibilityChange);
+  return () => {
+    document.removeEventListener("visibilitychange", handleVisibilityChange);
     
-//   };
-// }, []);
+  };
+}, []);
 
 useEffect(() => {
   const handleBeforeUnload = (event) => {

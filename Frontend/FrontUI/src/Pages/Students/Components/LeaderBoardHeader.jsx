@@ -3,7 +3,7 @@ import React from 'react'
 
 const LeaderBoardHeader = ({TopPerformers}) => {
   return (
-     <div className='relative min-h-[150px] grid grid-cols-3 border mt-8 rounded-xl p-4 text-black bg-purple-200 border-purple-400  overflow-hidden'>
+     <div className='relative min-h-[150px] grid grid-cols-3 border mt-8 rounded-xl p-4 text-black bg-purple-100 border-purple-400  overflow-hidden'>
        
 
         <div className='col-span-1 relative '>

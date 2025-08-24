@@ -354,7 +354,7 @@ const validateAndNext = (e) => {
 
         case "test-cases": {
             DefaultChlng.testCases.forEach(({ input, expectedOutput }, index) => {
-                if (!input.trim()) errors.push(`Input is required for Test Case ${index + 1}.`);
+                if (!input) errors.push(`Input is required for Test Case ${index + 1}.`);
                 if (!expectedOutput.trim()) errors.push(`Expected Output is required for Test Case ${index + 1}.`);
             });
             break;
@@ -426,14 +426,14 @@ const updateBaseWidth = () => {
   };
 }, [ChallengeID , Buffer]);
 
-// useEffect(() => {
-//     setBuffer(true);
-//     const timer = setTimeout(() => {
-//         setBuffer(false);
-//     }, 3000);
+useEffect(() => {
+    setBuffer(true);
+    const timer = setTimeout(() => {
+        setBuffer(false);
+    }, 3000);
 
-//     return () => clearTimeout(timer);
-// }, [ChallengeID]);
+    return () => clearTimeout(timer);
+}, [ChallengeID]);
 
     if (Buffer) {
         return <Spinner message={"Preparing your challenge..."}/>
